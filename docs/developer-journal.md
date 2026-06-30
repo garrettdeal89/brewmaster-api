@@ -29,3 +29,16 @@
 ### Key Notes
 - addresses separation concerns via DTO layer
 - scalable API design
+
+## Sprint 3: Implement Recipe Controller, Service Layer and Database
+### Features:
+- implemented sercive later for coffee recipes
+-  implemented recipe controller endpoint
+- implemented recipe repositry and interface
+- implemented database seeder
+
+### Key Notes
+- developed fully persistent REST API
+- h2 DB URL: jdbc:h2:mem:brewmasterdb
+
+### Fix: Environment configuration mismatch causing database resolution failure
