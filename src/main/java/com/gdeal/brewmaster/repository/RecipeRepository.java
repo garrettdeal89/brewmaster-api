@@ -1,9 +1,12 @@
 package com.gdeal.brewmaster.repository;
-import java.util.List;
+
+import org.springframework.stereotype.Repository;
+
 import com.gdeal.brewmaster.model.Recipe;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 
-public interface RecipeRepository {
+@Repository
+public interface RecipeRepository extends JpaRepository<Recipe, Long> {
     
-    List<Recipe> findAll();
 }
