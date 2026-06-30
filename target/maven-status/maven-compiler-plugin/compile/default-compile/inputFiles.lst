@@ -4,3 +4,5 @@ C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\controller\Reci
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\dto\HealthResponse.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\model\CoffeeType.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\model\Recipe.java
+C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\repository\RecipeRepository.java
+C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\service\RecipeService.java
