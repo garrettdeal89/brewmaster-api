@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.gdeal.brewmaster.service.RecipeService;
 import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.model.Recipe;
+import org.springframework.web.bind.annotation.PathVariable;
 
 
 @RestController
@@ -22,6 +23,13 @@ public class RecipeController {
 
     @GetMapping
     public List<RecipeDTO> getAllRecipes() {
+        
         return recipeService.getAllRecipes();
+    }
+
+    @GetMapping("/{id}")
+    public RecipeDTO getRecipeById(@PathVariable Long id) {
+        
+        return recipeService.getRecipeById(id);
     }
 }

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import com.gdeal.brewmaster.model.Recipe;
 import com.gdeal.brewmaster.repository.RecipeRepository;
 import com.gdeal.brewmaster.dto.RecipeDTO;
+import com.gdeal.brewmaster.exception.RecipeNotFoundException;
 
 
 
@@ -23,6 +24,13 @@ public class RecipeService {
                 .stream()
                 .map(this::toDTO)
                 .toList();
+    }
+
+    public RecipeDTO getRecipeById(Long id) {
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new RecipeNotFoundException(id));
+        
+                return toDTO(recipe);
     }
 
     private RecipeDTO toDTO(Recipe recipe) {
