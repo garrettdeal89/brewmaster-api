@@ -6,8 +6,7 @@ import com.gdeal.brewmaster.model.Recipe;
 import com.gdeal.brewmaster.repository.RecipeRepository;
 import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.exception.RecipeNotFoundException;
-
-
+import com.gdeal.brewmaster.dto.CreateRecipeRequest;
 
 
 @Service
@@ -32,6 +31,18 @@ public class RecipeService {
         
                 return toDTO(recipe);
     }
+
+    public RecipeDTO createRecipe(CreateRecipeRequest request) {
+        Recipe recipe = new Recipe();
+        recipe.setType(request.getType());
+        recipe.setName(request.getName());
+        recipe.setDescription(request.getDescription());
+
+        Recipe savedRecipe = recipeRepository.save(recipe);
+        
+        return toDTO(savedRecipe);
+    }
+
 
     private RecipeDTO toDTO(Recipe recipe) {
         return new RecipeDTO(

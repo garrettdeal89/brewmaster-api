@@ -7,8 +7,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.gdeal.brewmaster.service.RecipeService;
 import com.gdeal.brewmaster.dto.RecipeDTO;
-import com.gdeal.brewmaster.model.Recipe;
 import org.springframework.web.bind.annotation.PathVariable;
+import com.gdeal.brewmaster.dto.CreateRecipeRequest;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.ResponseEntity;
+import java.net.URI;
 
 
 @RestController
@@ -31,5 +36,16 @@ public class RecipeController {
     public RecipeDTO getRecipeById(@PathVariable Long id) {
         
         return recipeService.getRecipeById(id);
+    }
+
+    @PostMapping
+    public ResponseEntity<RecipeDTO> createRecipe(
+        @Valid @RequestBody CreateRecipeRequest request) {
+
+    RecipeDTO recipe = recipeService.createRecipe(request);
+
+    return ResponseEntity
+            .created(URI.create("/api/recipes/" + recipe.getId()))
+            .body(recipe);
     }
 }
