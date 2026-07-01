@@ -42,3 +42,18 @@
 - h2 DB URL: jdbc:h2:mem:brewmasterdb
 
 ### Fix: Environment configuration mismatch causing database resolution failure
+
+## Sprint 4: Recipe Creation API
+
+### Features
+- Added CreateRecipeRequest DTO for API input.
+- Implemented POST /api/recipes endpoint.
+- Added Bean Validation using @Valid, @NotBlank, and @NotNull.
+- Persisted recipes using Spring Data JPA.
+- Updated endpoint to return HTTP 201 Created with a Location header.
+- Verified functionality using Swagger UI.
+
+### Key Notes
+- Request DTOs should be separate from response DTOs and JPA entities.
+- Bean Validation integrates seamlessly with Spring using @Valid.
+- Returning proper HTTP status codes (201 Created) makes an API more RESTful and standards-compliant.

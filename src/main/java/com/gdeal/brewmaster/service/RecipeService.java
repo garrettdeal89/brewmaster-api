@@ -43,6 +43,20 @@ public class RecipeService {
         return toDTO(savedRecipe);
     }
 
+    public RecipeDTO updateRecipe(Long id, CreateRecipeRequest request) {
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new RecipeNotFoundException(id));
+
+        recipe.setType(request.getType());
+        recipe.setName(request.getName());
+        recipe.setDescription(request.getDescription());
+
+        Recipe updatedRecipe = recipeRepository.save(recipe);
+        
+        return toDTO(updatedRecipe);
+
+    }
+
 
     private RecipeDTO toDTO(Recipe recipe) {
         return new RecipeDTO(
