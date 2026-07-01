@@ -57,3 +57,19 @@
 - Request DTOs should be separate from response DTOs and JPA entities.
 - Bean Validation integrates seamlessly with Spring using @Valid.
 - Returning proper HTTP status codes (201 Created) makes an API more RESTful and standards-compliant.
+
+## Sprint 5: Update Recipes
+
+### Features
+-
+
+### Key Notes
+-
+
+## Sprint 6: Delete Recipes
+
+### Features
+-
+
+### Key Notes
+-

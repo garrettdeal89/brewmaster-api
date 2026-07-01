@@ -54,6 +54,14 @@ public class RecipeService {
 
     }
 
+    public void deleteRecipe(Long id) {
+        Recipe recipe = recipeRepository.findById(id)
+                .orElseThrow(() -> new RecipeNotFoundException(id));
+        
+        recipeRepository.delete(recipe);
+    }
+    
+
     private void updateRecipeFromRequest(
       Recipe recipe, 
       CreateRecipeRequest request) {

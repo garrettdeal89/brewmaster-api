@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 import java.net.URI;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 
 @RestController
@@ -56,5 +57,11 @@ public class RecipeController {
         @Valid @RequestBody CreateRecipeRequest request) {
         
         return recipeService.updateRecipe(id, request);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteRecipe(@PathVariable Long id) {
+        recipeService.deleteRecipe(id);
+        return ResponseEntity.noContent().build();
     }
 }
