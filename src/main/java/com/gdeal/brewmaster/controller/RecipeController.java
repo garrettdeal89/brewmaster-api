@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import com.gdeal.brewmaster.service.RecipeService;
-
-
+import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.model.Recipe;
 
 
@@ -22,8 +21,7 @@ public class RecipeController {
     }
 
     @GetMapping
-    public List<Recipe> getAllRecipes() {
-
+    public List<RecipeDTO> getAllRecipes() {
         return recipeService.getAllRecipes();
     }
 }
