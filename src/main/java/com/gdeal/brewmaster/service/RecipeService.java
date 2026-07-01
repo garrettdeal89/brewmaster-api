@@ -33,28 +33,34 @@ public class RecipeService {
     }
 
     public RecipeDTO createRecipe(CreateRecipeRequest request) {
-        Recipe recipe = new Recipe();
-        recipe.setType(request.getType());
-        recipe.setName(request.getName());
-        recipe.setDescription(request.getDescription());
+    Recipe recipe = new Recipe();
 
-        Recipe savedRecipe = recipeRepository.save(recipe);
-        
-        return toDTO(savedRecipe);
-    }
+    updateRecipeFromRequest(recipe, request);
+
+    Recipe savedRecipe = recipeRepository.save(recipe);
+    
+    return toDTO(savedRecipe);
+}
 
     public RecipeDTO updateRecipe(Long id, CreateRecipeRequest request) {
         Recipe recipe = recipeRepository.findById(id)
                 .orElseThrow(() -> new RecipeNotFoundException(id));
 
-        recipe.setType(request.getType());
-        recipe.setName(request.getName());
-        recipe.setDescription(request.getDescription());
+        updateRecipeFromRequest(recipe, request);
 
         Recipe updatedRecipe = recipeRepository.save(recipe);
         
         return toDTO(updatedRecipe);
 
+    }
+
+    private void updateRecipeFromRequest(
+      Recipe recipe, 
+      CreateRecipeRequest request) {
+
+        recipe.setType(request.getType());
+        recipe.setName(request.getName());
+        recipe.setDescription(request.getDescription());
     }
 
 

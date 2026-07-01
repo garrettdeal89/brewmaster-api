@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
 import java.net.URI;
+import org.springframework.web.bind.annotation.PutMapping;
 
 
 @RestController
@@ -47,5 +48,13 @@ public class RecipeController {
     return ResponseEntity
             .created(URI.create("/api/recipes/" + recipe.getId()))
             .body(recipe);
+    }
+
+    @PutMapping("/{id}")
+    public RecipeDTO updateRecipe(
+        @PathVariable Long id, 
+        @Valid @RequestBody CreateRecipeRequest request) {
+        
+        return recipeService.updateRecipe(id, request);
     }
 }
