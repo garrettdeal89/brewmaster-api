@@ -61,23 +61,44 @@
 ## Sprint 5: Update Recipes
 
 ### Features
--
+- Implemented PUT /api/recipes/{id} endpoint to update existing recipes.
+- Added update functionality to the RecipeService.
+- Reused CreateRecipeRequest DTO for both create and update operations.
+- Returned updated RecipeDTO after a successful update.
+- Refactored duplicate entity mapping logic into a shared helper method (updateRecipeFromRequest).
 
 ### Key Notes
--
+-Practiced RESTful update semantics using HTTP PUT.
+- Reinforced separation of concerns by keeping business logic in the service layer.
+- Eliminated duplicated code through method extraction.
+- refactors improve maintainability without changing behavior
 
 ## Sprint 6: Delete Recipes
 
 ### Features
--
+- Implemented DELETE /api/recipes/{id} endpoint.
+- Added delete functionality to the RecipeService.
+- Reused RecipeNotFoundException for consistent error handling.
+- Returned 204 No Content on successful deletion.
 
 ### Key Notes
--
+- Completed full CRUD functionality for the Recipe resource.
+- REST conventions for DELETE requests.
+= Used ResponseEntity.noContent() to return the correct HTTP response.
+- Verified deletion behavior using Swagger.
 
 ## Sprint 7: Service and Controller Testing
 
 ### Tests
--
+- Added unit tests for the RecipeService using JUnit 5 and Mockito.
+- Mocked the RecipeRepository to isolate service logic.
+- Added MockMvc controller tests for Recipe endpoints.
+- Verified HTTP status codes, JSON responses, and controller behavior.
+- Updated tests to use @MockitoBean instead of the deprecated @MockBean (Spring Boot 3.5).
 
 ### Key Notes
--
+- AAA (Arrange, Act, Assert) testing pattern.
+- Practiced mocking dependencies with Mockito.
+- Tested the service layer independently from the web layer.
+- MockMvc simulates HTTP requests without starting the application.
+- Established an automated regression test suite using mvn test.
