@@ -106,15 +106,37 @@
 ## Sprint 8: Pagination Support
 
 ### Feature
-- 
+- Implemented pageable GET /api/recipes endpoint using Spring Data Pageable
+- Added page and size query parameters with default values
+- Integrated Page<RecipeDTO> response structure in controller and service
 
 ### Key Notes
-- 
+- Established foundational REST pagination pattern using Spring Data JPA
+- Enabled scalable recipe retrieval for large datasets
+- Ensured DTO-based responses remained consistent with API design
 
 ## Sprint 9: Sorting Support
 
 ### Feature
-- 
+- Added dynamic sorting to /api/recipes via sortField and sortDirection
+- Integrated Spring Data Sort with pageable queries
+- Implemented validation whitelist for allowed sort fields (id, name, type)
 
 ### Key Notes
-- 
+- Prevented invalid sort inputs using defensive validation (returns 400 Bad Request)
+- Improved API flexibility while maintaining safe query execution
+- Refactored exception handling for clean error responses via GlobalExceptionHandler
+
+## Sprint 10: Filtering Support
+
+### Feature
+- Added filtering by CoffeeType via type query parameter
+- Implemented repository method findByType(CoffeeType, Pageable)
+- Updated service layer to conditionally apply filtering logic
+- Combined filtering with pagination and sorting in a single endpoint
+
+### Key Notes
+- nabled dynamic query composition (filter + sort + pagination)
+- Maintained single REST endpoint instead of multiple specialized endpoints
+- Improved API usability and real-world parity with production REST services
+- Strengthened separation of concerns between controller, service, and repository layers
