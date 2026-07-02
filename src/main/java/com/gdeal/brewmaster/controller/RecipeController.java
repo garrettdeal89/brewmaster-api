@@ -34,9 +34,15 @@ public class RecipeController {
     @GetMapping
     public Page<RecipeDTO> getAllRecipes(
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size) {
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(defaultValue = "id") String sortField,
+        @RequestParam(defaultValue = "asc") String sortDirection) {
 
-    return recipeService.getAllRecipes(page, size);
+    return recipeService.getAllRecipes(
+            page,
+            size,
+            sortField,
+            sortDirection);
 }
 
     @GetMapping("/{id}")

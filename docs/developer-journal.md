@@ -102,3 +102,19 @@
 - Tested the service layer independently from the web layer.
 - MockMvc simulates HTTP requests without starting the application.
 - Established an automated regression test suite using mvn test.
+
+## Sprint 8: Pagination Support
+
+### Feature
+- 
+
+### Key Notes
+- 
+
+## Sprint 9: Sorting Support
+
+### Feature
+- 
+
+### Key Notes
+- 

@@ -12,23 +12,43 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
+import org.springframework.data.domain.Sort;
+import java.util.Set;
+
 
 @Service
 public class RecipeService {
 
    private final RecipeRepository recipeRepository;
 
+   private static final Set<String> ALLOWED_SORT_FIELDS =
+        Set.of("id", "name", "type");
+
     public RecipeService(RecipeRepository recipeRepository) {
         this.recipeRepository = recipeRepository;
     }
 
-    public Page<RecipeDTO> getAllRecipes(int page, int size) {
-        
-      Pageable pageable = PageRequest.of(page, size);
-        
-      return recipeRepository.findAll(pageable)
-                .map(this::toDTO);
-    }
+    public Page<RecipeDTO> getAllRecipes(
+        int page,
+        int size,
+        String sortField,
+        String sortDirection) {
+
+    if (!ALLOWED_SORT_FIELDS.contains(sortField)) {
+    throw new IllegalArgumentException(
+            "Invalid sort field: " + sortField +
+            ". Allowed values are: " + ALLOWED_SORT_FIELDS);
+          }
+
+    Sort sort = sortDirection.equalsIgnoreCase("desc")
+            ? Sort.by(sortField).descending()
+            : Sort.by(sortField).ascending();
+
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+    return recipeRepository.findAll(pageable)
+            .map(this::toDTO);
+}
 
     public RecipeDTO getRecipeById(Long id) {
         Recipe recipe = recipeRepository.findById(id)
