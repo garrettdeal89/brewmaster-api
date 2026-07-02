@@ -3,11 +3,12 @@ package com.gdeal.brewmaster.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import com.gdeal.brewmaster.model.CoffeeType;
 
 import com.gdeal.brewmaster.service.RecipeService;
 import com.gdeal.brewmaster.dto.RecipeDTO;
+import com.gdeal.brewmaster.dto.RecipeQueryParams;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import com.gdeal.brewmaster.dto.CreateRecipeRequest;
 import jakarta.validation.Valid;
@@ -31,20 +32,15 @@ public class RecipeController {
     }
 
     @GetMapping
-    public Page<RecipeDTO> getAllRecipes(
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "id") String sortField,
-        @RequestParam(defaultValue = "asc") String sortDirection,
-        @RequestParam(required = false) CoffeeType type) {
+    public Page<RecipeDTO> getAllRecipes(RecipeQueryParams params) {
 
     return recipeService.getAllRecipes(
-            page,
-            size,
-            sortField,
-            sortDirection,
-            type
-        );
+            params.getPage(),
+            params.getSize(),
+            params.getSortField(),
+            params.getSortDirection(),
+            params.getType()
+    );
 }
 
     @GetMapping("/{id}")
