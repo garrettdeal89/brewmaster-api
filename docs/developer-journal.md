@@ -140,3 +140,9 @@
 - Maintained single REST endpoint instead of multiple specialized endpoints
 - Improved API usability and real-world parity with production REST services
 - Strengthened separation of concerns between controller, service, and repository layers
+
+### Refactor Query Params
+- 
+
+### Key Notes
+-

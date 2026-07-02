@@ -1,1 +1,14 @@
+com\gdeal\brewmaster\exception\GlobalExceptionHandler.class
+com\gdeal\brewmaster\dto\CreateRecipeRequest.class
+com\gdeal\brewmaster\model\CoffeeType.class
+com\gdeal\brewmaster\controller\RecipeController.class
+com\gdeal\brewmaster\dto\HealthResponse.class
+com\gdeal\brewmaster\repository\RecipeRepository.class
+com\gdeal\brewmaster\exception\RecipeNotFoundException.class
+com\gdeal\brewmaster\dto\RecipeQueryParams.class
+com\gdeal\brewmaster\model\Recipe.class
 com\gdeal\brewmaster\BrewmasterApplication.class
+com\gdeal\brewmaster\controller\HealthController.class
+com\gdeal\brewmaster\service\RecipeService.class
+com\gdeal\brewmaster\config\DataSeeder.class
+com\gdeal\brewmaster\dto\RecipeDTO.class

@@ -3,7 +3,6 @@ package com.gdeal.brewmaster.controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.gdeal.brewmaster.model.CoffeeType;
 
 import com.gdeal.brewmaster.service.RecipeService;
 import com.gdeal.brewmaster.dto.RecipeDTO;
@@ -34,13 +33,7 @@ public class RecipeController {
     @GetMapping
     public Page<RecipeDTO> getAllRecipes(RecipeQueryParams params) {
 
-    return recipeService.getAllRecipes(
-            params.getPage(),
-            params.getSize(),
-            params.getSortField(),
-            params.getSortDirection(),
-            params.getType()
-    );
+    return recipeService.getAllRecipes(params);
 }
 
     @GetMapping("/{id}")

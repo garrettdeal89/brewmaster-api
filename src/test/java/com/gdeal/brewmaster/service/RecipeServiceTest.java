@@ -1,6 +1,6 @@
 package com.gdeal.brewmaster.service;
 
-
+import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.model.CoffeeType;
 import com.gdeal.brewmaster.model.Recipe;
 import com.gdeal.brewmaster.repository.RecipeRepository;
@@ -9,14 +9,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.gdeal.brewmaster.dto.RecipeDTO;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
-
 
 @ExtendWith(MockitoExtension.class)
 class RecipeServiceTest {

@@ -2,9 +2,9 @@ package com.gdeal.brewmaster.service;
 
 import com.gdeal.brewmaster.dto.CreateRecipeRequest;
 import com.gdeal.brewmaster.dto.RecipeDTO;
+import com.gdeal.brewmaster.dto.RecipeQueryParams;
 import com.gdeal.brewmaster.exception.RecipeNotFoundException;
 import com.gdeal.brewmaster.model.Recipe;
-import com.gdeal.brewmaster.model.CoffeeType;
 import com.gdeal.brewmaster.repository.RecipeRepository;
 
 import org.springframework.data.domain.Page;
@@ -29,28 +29,23 @@ public class RecipeService {
     }
 
     public Page<RecipeDTO> getAllRecipes(
-        int page,
-        int size,
-        String sortField,
-        String sortDirection,
-        CoffeeType type) {
+        RecipeQueryParams params) {
 
-    if (!ALLOWED_SORT_FIELDS.contains(sortField)) {
+    if (!ALLOWED_SORT_FIELDS.contains(params.getSortField())) {
     throw new IllegalArgumentException(
-            "Invalid sort field: " + sortField +
-            ". Allowed values are: " + ALLOWED_SORT_FIELDS);
-          }
+            "Invalid sort field: " + params.getSortField()
+            + ". Allowed values are: " + ALLOWED_SORT_FIELDS);
+}
+    Sort sort = params.getSortDirection().equalsIgnoreCase("desc")
+            ? Sort.by(params.getSortField()).descending()
+            : Sort.by(params.getSortField()).ascending();
 
-    Sort sort = sortDirection.equalsIgnoreCase("desc")
-            ? Sort.by(sortField).descending()
-            : Sort.by(sortField).ascending();
-
-    Pageable pageable = PageRequest.of(page, size, sort);
+    Pageable pageable = PageRequest.of(params.getPage(), params.getSize(), sort);
 
     Page<Recipe> recipes;
 
-        if (type != null) {
-           recipes = recipeRepository.findByType(type, pageable);
+        if (params.getType() != null) {
+           recipes = recipeRepository.findByType(params.getType(), pageable);
         } else {
           recipes = recipeRepository.findAll(pageable);
         }
