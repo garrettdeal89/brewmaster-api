@@ -1,6 +1,6 @@
 package com.gdeal.brewmaster.service;
 
-import com.gdeal.brewmaster.dto.CreateRecipeRequest;
+
 import com.gdeal.brewmaster.model.CoffeeType;
 import com.gdeal.brewmaster.model.Recipe;
 import com.gdeal.brewmaster.repository.RecipeRepository;
