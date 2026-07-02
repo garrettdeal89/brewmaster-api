@@ -1,18 +1,18 @@
 package com.gdeal.brewmaster.service;
-import java.util.List;
 
-import org.springframework.stereotype.Service;
-import com.gdeal.brewmaster.model.Recipe;
-import com.gdeal.brewmaster.repository.RecipeRepository;
+import com.gdeal.brewmaster.dto.CreateRecipeRequest;
 import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.exception.RecipeNotFoundException;
-import com.gdeal.brewmaster.dto.CreateRecipeRequest;
+import com.gdeal.brewmaster.model.Recipe;
+import com.gdeal.brewmaster.model.CoffeeType;
+import com.gdeal.brewmaster.repository.RecipeRepository;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.data.domain.Sort;
+import org.springframework.stereotype.Service;
+
 import java.util.Set;
 
 
@@ -32,7 +32,8 @@ public class RecipeService {
         int page,
         int size,
         String sortField,
-        String sortDirection) {
+        String sortDirection,
+        CoffeeType type) {
 
     if (!ALLOWED_SORT_FIELDS.contains(sortField)) {
     throw new IllegalArgumentException(
@@ -46,9 +47,17 @@ public class RecipeService {
 
     Pageable pageable = PageRequest.of(page, size, sort);
 
-    return recipeRepository.findAll(pageable)
-            .map(this::toDTO);
-}
+    Page<Recipe> recipes;
+
+        if (type != null) {
+           recipes = recipeRepository.findByType(type, pageable);
+        } else {
+          recipes = recipeRepository.findAll(pageable);
+        }
+
+return recipes.map(this::toDTO);
+
+    }
 
     public RecipeDTO getRecipeById(Long id) {
         Recipe recipe = recipeRepository.findById(id)
