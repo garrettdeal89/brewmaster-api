@@ -13,29 +13,26 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(RecipeNotFoundException.class)
-public ResponseEntity<Map<String, Object>> handleRecipeNotFound(
-        RecipeNotFoundException ex) {
+    public ResponseEntity<Map<String, Object>> handleRecipeNotFound(RecipeNotFoundException ex) {
 
-    return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
-}
+        Map<String, Object> error = new HashMap<>();
+        error.put("timestamp", LocalDateTime.now());
+        error.put("status", 404);
+        error.put("error", "Not Found");
+        error.put("message", ex.getMessage());
 
-@ExceptionHandler(IllegalArgumentException.class)
-public ResponseEntity<Map<String, Object>> handleIllegalArgument(
-        IllegalArgumentException ex) {
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
 
-    return buildErrorResponse(HttpStatus.BAD_REQUEST, ex.getMessage());
-}
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Map<String, Object>> handleBadRequest(IllegalArgumentException ex) {
 
-    private ResponseEntity<Map<String, Object>> buildErrorResponse(
-        HttpStatus status,
-        String message) {
+        Map<String, Object> error = new HashMap<>();
+        error.put("timestamp", LocalDateTime.now());
+        error.put("status", 400);
+        error.put("error", "Bad Request");
+        error.put("message", ex.getMessage());
 
-    Map<String, Object> error = new HashMap<>();
-    error.put("timestamp", LocalDateTime.now());
-    error.put("status", status.value());
-    error.put("error", status.getReasonPhrase());
-    error.put("message", message);
-
-    return new ResponseEntity<>(error, status);
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 }

@@ -51,4 +51,18 @@ class RecipeControllerTest {
                 .andExpect(jsonPath("$.content[0].name").value("Latte"))
                 .andExpect(jsonPath("$.content[1].name").value("Cappuccino"));
     }
+
+    @Test
+    void getAllRecipes_shouldReturn400_whenInvalidSortField() throws Exception {
+
+    when(recipeService.getAllRecipes(any(RecipeQueryParams.class)))
+            .thenThrow(new IllegalArgumentException("Invalid sort field"));
+
+    mockMvc.perform(get("/api/recipes")
+                    .param("sortField", "invalid"))
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.status").value(400))
+            .andExpect(jsonPath("$.error").value("Bad Request"))
+            .andExpect(jsonPath("$.message").value("Invalid sort field"));
+        }
 }
