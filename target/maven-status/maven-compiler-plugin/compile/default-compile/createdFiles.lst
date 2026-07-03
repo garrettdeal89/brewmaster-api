@@ -11,4 +11,5 @@ com\gdeal\brewmaster\BrewmasterApplication.class
 com\gdeal\brewmaster\controller\HealthController.class
 com\gdeal\brewmaster\service\RecipeService.class
 com\gdeal\brewmaster\config\DataSeeder.class
+com\gdeal\brewmaster\dto\ApiResponse.class
 com\gdeal\brewmaster\dto\RecipeDTO.class

@@ -1,5 +1,6 @@
 package com.gdeal.brewmaster.exception;
 
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +33,24 @@ public class GlobalExceptionHandler {
         error.put("status", 400);
         error.put("error", "Bad Request");
         error.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<Map<String, Object>> handleValidationException(
+        MethodArgumentNotValidException ex) {
+            
+        Map<String, Object> error = new HashMap<>();
+        error.put("timestamp", LocalDateTime.now());
+        error.put("status", 400);
+        error.put("error", "Bad Request");
+
+        String message = ex.getBindingResult()
+        .getFieldError()
+        .getDefaultMessage();
+
+        error.put("message", message);
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }

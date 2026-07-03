@@ -17,6 +17,8 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+
 import java.net.URI;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,7 @@ import org.springframework.data.domain.Page;
 
 @RestController
 @RequestMapping("/api/recipes")
+@Validated
 public class RecipeController {
     
     private final RecipeService recipeService;
@@ -33,7 +36,8 @@ public class RecipeController {
     }
 // GET all recipes with pagination and sorting
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<RecipeDTO>>> getAllRecipes(RecipeQueryParams params) {
+    public ResponseEntity<ApiResponse<Page<RecipeDTO>>> getAllRecipes(
+        @Valid RecipeQueryParams params) {
 
     Page<RecipeDTO> recipes = recipeService.getAllRecipes(params);
 
