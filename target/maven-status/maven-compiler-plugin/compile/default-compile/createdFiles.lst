@@ -1,3 +1,4 @@
+com\gdeal\brewmaster\dto\ApiError.class
 com\gdeal\brewmaster\exception\GlobalExceptionHandler.class
 com\gdeal\brewmaster\dto\CreateRecipeRequest.class
 com\gdeal\brewmaster\model\CoffeeType.class

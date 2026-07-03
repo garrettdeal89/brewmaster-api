@@ -10,48 +10,51 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.gdeal.brewmaster.dto.ApiError;
+
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(RecipeNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleRecipeNotFound(RecipeNotFoundException ex) {
+public ResponseEntity<ApiError> handleRecipeNotFound(
+        RecipeNotFoundException ex) {
 
-        Map<String, Object> error = new HashMap<>();
-        error.put("timestamp", LocalDateTime.now());
-        error.put("status", 404);
-        error.put("error", "Not Found");
-        error.put("message", ex.getMessage());
+    ApiError error = new ApiError(
+            404,
+            "Not Found",
+            ex.getMessage());
 
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
+    return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(error);
+}
 
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<Map<String, Object>> handleBadRequest(IllegalArgumentException ex) {
+public ResponseEntity<ApiError> handleIllegalArgument(
+        IllegalArgumentException ex) {
 
-        Map<String, Object> error = new HashMap<>();
-        error.put("timestamp", LocalDateTime.now());
-        error.put("status", 400);
-        error.put("error", "Bad Request");
-        error.put("message", ex.getMessage());
+    ApiError error = new ApiError(
+            400,
+            "Bad Request",
+            ex.getMessage());
 
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
+    return ResponseEntity.badRequest()
+            .body(error);
+}
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, Object>> handleValidationException(
+    public ResponseEntity<ApiError> handleValidationException(
         MethodArgumentNotValidException ex) {
-            
-        Map<String, Object> error = new HashMap<>();
-        error.put("timestamp", LocalDateTime.now());
-        error.put("status", 400);
-        error.put("error", "Bad Request");
 
-        String message = ex.getBindingResult()
-        .getFieldError()
-        .getDefaultMessage();
+    String message = ex.getBindingResult()
+            .getFieldError()
+            .getDefaultMessage();
 
-        error.put("message", message);
+    ApiError error = new ApiError(
+            400,
+            "Bad Request",
+            message);
 
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    return ResponseEntity.badRequest()
+            .body(error);
     }
 }
