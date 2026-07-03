@@ -40,16 +40,14 @@ class RecipeControllerTest {
         when(recipeService.getAllRecipes(any(RecipeQueryParams.class)))
                 .thenReturn(mockRecipes);
 
-        mockMvc.perform(get("/api/recipes")
-                        .param("page", "0")
-                        .param("size", "10")
-                        .param("sortField", "id")
-                        .param("sortDirection", "asc"))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.content.length()").value(2))
-                .andExpect(jsonPath("$.content[0].name").value("Latte"))
-                .andExpect(jsonPath("$.content[1].name").value("Cappuccino"));
+        mockMvc.perform(get("/api/recipes"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.status").value(200))
+        .andExpect(jsonPath("$.message").value("Recipes retrieved successfully"))
+        .andExpect(jsonPath("$.data.content.length()").value(2))
+        .andExpect(jsonPath("$.data.content[0].name").value("Latte"))
+        .andExpect(jsonPath("$.data.content[1].name").value("Cappuccino"));
     }
 
     @Test
