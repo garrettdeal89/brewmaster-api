@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.gdeal.brewmaster.service.RecipeService;
+
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.dto.RecipeQueryParams;
 
@@ -24,6 +27,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.data.domain.Page;
 
 
+@Tag(
+    name = "Recipes",
+    description = "Endpoints for managing coffee recipes, including: creation, retrieval, updating, deletion, pagination, sorting, and filtering."
+)
 @RestController
 @RequestMapping("/api/recipes")
 @Validated
