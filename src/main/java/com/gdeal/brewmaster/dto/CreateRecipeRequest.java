@@ -4,16 +4,33 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import com.gdeal.brewmaster.model.CoffeeType;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 
+//Documentation for CreateRecipeRequest
+@Schema(
+    description = "Request body used to create or update a coffee recipe."
+)
 public class CreateRecipeRequest {
     
+
     @NotNull
+    @Schema(
+    description = "Coffee beverage type"
+    )
     private CoffeeType type;
 
     @NotBlank
+    @Schema(
+    description = "Recipe name",
+    example = "Flat White"
+    )
     private String name;
 
     @NotBlank
+    @Schema(
+    description = "Description of the recipe",
+    example = "Espresso with steamed milk."
+    )
     private String description;
 
     public CreateRecipeRequest(){    
