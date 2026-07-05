@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.gdeal.brewmaster.service.RecipeService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import com.gdeal.brewmaster.dto.RecipeDTO;
@@ -41,6 +43,28 @@ public class RecipeController {
     public RecipeController(RecipeService recipeService) {
         this.recipeService = recipeService;
     }
+
+    @Operation(
+        summary = "Retrieve all recipes.", 
+        description = """
+        Returns a paginated list of coffee recipes.
+
+        Results can be:
+        • Paginated
+        • Sorted by id, name, or type
+        • Filtered by coffee type
+        """)
+    @ApiResponses({
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+        responseCode = "200",
+        description = "Recipes retrieved successfully"
+    ),
+    @io.swagger.v3.oas.annotations.responses.ApiResponse(
+        responseCode = "400",
+        description = "Invalid query parameters"
+    )
+})
+
 // GET all recipes with pagination and sorting
     @GetMapping
     public ResponseEntity<ApiResponse<Page<RecipeDTO>>> getAllRecipes(
