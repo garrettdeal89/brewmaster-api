@@ -27,7 +27,7 @@ import org.springframework.validation.annotation.Validated;
 import java.net.URI;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.data.domain.Page;
-
+import io.swagger.v3.oas.annotations.Parameter;
 
 @Tag(
     name = "Recipes",
@@ -68,7 +68,9 @@ public class RecipeController {
 // GET all recipes with pagination and sorting
     @GetMapping
     public ResponseEntity<ApiResponse<Page<RecipeDTO>>> getAllRecipes(
-        @Valid RecipeQueryParams params) {
+
+    @Parameter(description = "Query parameters for pagination, sorting, and filtering")
+    @Valid RecipeQueryParams params) {
 
     Page<RecipeDTO> recipes = recipeService.getAllRecipes(params);
 
