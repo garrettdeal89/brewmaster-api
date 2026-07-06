@@ -203,3 +203,15 @@
 - Improved discoverability of API functionality.
 - Added schema metadata for request and response models.
 
+# Sprint 15: Dynamic Recipe Search
+
+### Feature
+- Added case-insensitive recipe name search using Spring Data JPA Specifications.
+- Extended RecipeQueryParams to support optional name searching.
+- Introduced the RecipeSpecifications utility class for building reusable query filters.
+- Refactored the service layer to dynamically compose query specifications instead of relying on multiple repository methods.
+
+### Key Notes
+- Combined name searching and coffee type filtering into a single dynamic query.
+- Improved scalability by adopting the Specification pattern.
+- Established a flexible foundation for future filters such as ingredients, roast level, etc.
