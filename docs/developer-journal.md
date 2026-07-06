@@ -142,7 +142,64 @@
 - Strengthened separation of concerns between controller, service, and repository layers
 
 ### Refactor Query Params
-- 
+- Refactored the recipe listing endpoint to use the Query Object pattern by introducing the 
+- RecipeQueryParams DTO.
+- Consolidated pagination, sorting, and filtering parameters into a single object to simplify the   controller and improve maintainability.
+- Updated the service layer to consume the new query object.
+- Refactored controller tests to accommodate the new endpoint signature.
 
 ### Key Notes
--
+-educed controller method complexity by eliminating multiple individual request parameters.
+- Improved extensibility for future query options.
+- Demonstrated a common enterprise design pattern used in Spring Boot applications.
+- Updated and verified all unit and controller tests.
+
+# Sprint 11: Standardized API Responses
+
+### Feature
+- Introduced the generic ApiResponse<T> wrapper for successful API responses.
+- Updated recipe endpoints to return a consistent response structure.
+
+### Key Notes
+- Standardized successful responses across the API.
+- Improved consistency for API consumers.
+- Established a foundation for future metadata such as paging information and request identifiers.
+
+# Sprint 12: Validation
+
+### Feature
+- Added Bean Validation to RecipeQueryParams.
+- Implemented validation for pagination and sorting parameters.
+- Added validation exception handling to the global exception handler.
+
+### Key Notes
+- Prevented invalid page numbers and page sizes.
+- Restricted sort direction to supported values.
+- Returned consistent HTTP 400 responses for invalid requests.
+- Improved API robustness by validating requests before reaching the service layer.
+
+# Sprint 13: Standardized Error Response
+
+### Feature
+- Introduced the ApiError DTO to replace dynamically constructed error maps.
+- Updated the global exception handler to return strongly typed error responses.
+
+### Key Notes
+- Standardized all error responses.
+- Improved type safety and maintainability.
+- Preserved a consistent JSON error format across the API.
+- Simplified exception handling logic.
+
+# Sprint 14: OpenAPI Documentation
+
+### Feature
+- Configured OpenAPI metadata for the Brewmaster API.
+- Added controller tags for Health and Recipe endpoints.
+- Documented endpoints, response codes, request models, query parameters, and DTO schemas.
+- Enhanced generated Swagger documentation with descriptions and examples.
+
+### Key Notes
+- rganized API documentation into logical sections.
+- Improved discoverability of API functionality.
+- Added schema metadata for request and response models.
+
