@@ -14,7 +14,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
-
+import org.springframework.data.jpa.domain.Specification;
+import com.gdeal.brewmaster.specification.RecipeSpecifications;
+import com.gdeal.brewmaster.model.CoffeeType;
 
 @Service
 public class RecipeService {
@@ -28,31 +30,41 @@ public class RecipeService {
         this.recipeRepository = recipeRepository;
     }
 
-    public Page<RecipeDTO> getAllRecipes(
-        RecipeQueryParams params) {
+    public Page<RecipeDTO> getAllRecipes(RecipeQueryParams params) {
 
     if (!ALLOWED_SORT_FIELDS.contains(params.getSortField())) {
-    throw new IllegalArgumentException(
-            "Invalid sort field: " + params.getSortField()
-            + ". Allowed values are: " + ALLOWED_SORT_FIELDS);
-}
+        throw new IllegalArgumentException(
+                "Invalid sort field: " + params.getSortField()
+                + ". Allowed values are: " + ALLOWED_SORT_FIELDS);
+    }
+
     Sort sort = params.getSortDirection().equalsIgnoreCase("desc")
             ? Sort.by(params.getSortField()).descending()
             : Sort.by(params.getSortField()).ascending();
 
-    Pageable pageable = PageRequest.of(params.getPage(), params.getSize(), sort);
+    Pageable pageable = PageRequest.of(
+            params.getPage(),
+            params.getSize(),
+            sort);
 
-    Page<Recipe> recipes;
+    // Build the specification based on the provided query parameters
+    Specification<Recipe> spec = Specification.where(null);
 
-        if (params.getType() != null) {
-           recipes = recipeRepository.findByType(params.getType(), pageable);
-        } else {
-          recipes = recipeRepository.findAll(pageable);
-        }
-
-return recipes.map(this::toDTO);
-
+    if (params.getName() != null && !params.getName().isBlank()) {
+        spec = spec.and(
+                RecipeSpecifications.nameContains(params.getName()));
     }
+
+    if (params.getType() != null) {
+        spec = spec.and(
+                RecipeSpecifications.hasType(params.getType()));
+    }
+
+    // Fetch the recipes based on the specification and pagination
+    Page<Recipe> recipes = recipeRepository.findAll(spec, pageable);
+
+    return recipes.map(this::toDTO);
+}
 
     public RecipeDTO getRecipeById(Long id) {
         Recipe recipe = recipeRepository.findById(id)

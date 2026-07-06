@@ -54,8 +54,24 @@ public class RecipeQueryParams {
     @Schema(
     description = "Optional coffee type used to filter recipes"
     )
-    
     private CoffeeType type;
+
+    //Search by Name
+    @Schema(
+    description = "Optional recipe name search (partial, case-insensitive)",
+    example = "latte"
+    )
+    private String name; 
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
 
     public RecipeQueryParams() {}
 
