@@ -139,7 +139,7 @@ class RecipeControllerTest {
                 )
         );
 
-
+        
         when(recipeService.updateRecipe(
                 eq(1L),
                 any(CreateRecipeRequest.class)))

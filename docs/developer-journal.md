@@ -215,3 +215,11 @@
 - Combined name searching and coffee type filtering into a single dynamic query.
 - Improved scalability by adopting the Specification pattern.
 - Established a flexible foundation for future filters such as ingredients, roast level, etc.
+
+# Sprint 16: Ingredients Feature
+
+### Feature
+- 
+
+### Key Notes
+-
