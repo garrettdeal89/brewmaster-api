@@ -2,11 +2,14 @@ C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\BrewmasterAppli
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\config\DataSeeder.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\config\OpenApiConfig.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\controller\HealthController.java
+C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\controller\IngredientController.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\controller\RecipeController.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\dto\ApiError.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\dto\ApiResponse.java
+C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\dto\CreateIngredientRequest.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\dto\CreateRecipeRequest.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\dto\HealthResponse.java
+C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\dto\IngredientDTO.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\dto\RecipeDTO.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\dto\RecipeQueryParams.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\exception\GlobalExceptionHandler.java
@@ -14,6 +17,8 @@ C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\exception\Recip
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\model\CoffeeType.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\model\Ingredient.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\model\Recipe.java
+C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\repository\IngredientRepository.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\repository\RecipeRepository.java
+C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\service\IngredientService.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\service\RecipeService.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\specification\RecipeSpecifications.java
