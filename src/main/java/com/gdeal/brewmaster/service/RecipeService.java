@@ -36,7 +36,7 @@ public class RecipeService {
         RecipeRepository recipeRepository,  
         IngredientRepository ingredientRepository) { 
         this.recipeRepository = recipeRepository;
-        this.ingredientRepository = null;
+        this.ingredientRepository = ingredientRepository;
     }
 
     public Page<RecipeDTO> getAllRecipes(RecipeQueryParams params) {
