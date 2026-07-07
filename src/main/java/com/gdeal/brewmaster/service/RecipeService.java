@@ -5,6 +5,7 @@ import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.dto.RecipeQueryParams;
 import com.gdeal.brewmaster.exception.RecipeNotFoundException;
 import com.gdeal.brewmaster.model.Recipe;
+import com.gdeal.brewmaster.repository.IngredientRepository;
 import com.gdeal.brewmaster.repository.RecipeRepository;
 
 import org.springframework.data.domain.Page;
@@ -13,24 +14,29 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.data.jpa.domain.Specification;
 import com.gdeal.brewmaster.specification.RecipeSpecifications;
 import com.gdeal.brewmaster.model.Ingredient;
-import java.util.stream.Collectors;
+
 
 @Service
 public class RecipeService {
 
    private final RecipeRepository recipeRepository;
+   private final IngredientRepository ingredientRepository;
 
    private static final Set<String> ALLOWED_SORT_FIELDS =
         Set.of("id", "name", "type");
 
-    public RecipeService(RecipeRepository recipeRepository) {
+    public RecipeService(
+        RecipeRepository recipeRepository,  
+        IngredientRepository ingredientRepository) { 
         this.recipeRepository = recipeRepository;
+        this.ingredientRepository = null;
     }
 
     public Page<RecipeDTO> getAllRecipes(RecipeQueryParams params) {
@@ -107,13 +113,30 @@ public class RecipeService {
 
 
     private void updateRecipeFromRequest(
-      Recipe recipe, 
-      CreateRecipeRequest request) {
+        Recipe recipe,
+        CreateRecipeRequest request) {
 
-        recipe.setType(request.getType());
-        recipe.setName(request.getName());
-        recipe.setDescription(request.getDescription());
+    recipe.setType(request.getType());
+    recipe.setName(request.getName());
+    recipe.setDescription(request.getDescription());
+
+    if (request.getIngredientIds() != null) {
+
+        Set<Ingredient> ingredients = new HashSet<>();
+
+        for (Long ingredientId : request.getIngredientIds()) {
+
+            Ingredient ingredient = ingredientRepository.findById(ingredientId)
+                    .orElseThrow(() ->
+                            new RuntimeException(
+                                    "Ingredient not found: " + ingredientId));
+
+            ingredients.add(ingredient);
+        }
+
+        recipe.setIngredients(ingredients);
     }
+}
 
     private RecipeDTO toDTO(Recipe recipe) {
         return new RecipeDTO(
