@@ -1,5 +1,6 @@
 com\gdeal\brewmaster\dto\ApiError.class
 com\gdeal\brewmaster\dto\CreateIngredientRequest.class
+com\gdeal\brewmaster\exception\ResourceNotFoundException.class
 com\gdeal\brewmaster\service\IngredientService.class
 com\gdeal\brewmaster\dto\IngredientDTO.class
 com\gdeal\brewmaster\dto\HealthResponse.class

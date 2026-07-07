@@ -4,10 +4,14 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.http.ResponseEntity;
+
+import java.time.LocalDateTime;
+
 import org.springframework.http.HttpStatus;
 
 
 import com.gdeal.brewmaster.dto.ApiError;
+import com.gdeal.brewmaster.dto.ApiResponse;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -54,4 +58,19 @@ public ResponseEntity<ApiError> handleIllegalArgument(
     return ResponseEntity.badRequest()
             .body(error);
     }
+
+   @ExceptionHandler(ResourceNotFoundException.class)
+        public ResponseEntity<ApiResponse<Void>> handleResourceNotFound(
+        ResourceNotFoundException ex) {
+
+    ApiResponse<Void> response = new ApiResponse<>(
+            HttpStatus.NOT_FOUND.value(),
+            ex.getMessage(),
+            null
+    );
+
+    return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .body(response);
+        }
 }

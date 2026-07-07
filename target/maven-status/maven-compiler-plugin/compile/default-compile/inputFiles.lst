@@ -14,6 +14,7 @@ C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\dto\RecipeDTO.j
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\dto\RecipeQueryParams.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\exception\GlobalExceptionHandler.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\exception\RecipeNotFoundException.java
+C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\exception\ResourceNotFoundException.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\model\CoffeeType.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\model\Ingredient.java
 C:\Development\brewmaster-api\src\main\java\com\gdeal\brewmaster\model\Recipe.java

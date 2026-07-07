@@ -2,6 +2,7 @@ package com.gdeal.brewmaster.controller;
 
 import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.dto.RecipeQueryParams;
+import com.gdeal.brewmaster.exception.ResourceNotFoundException;
 import com.gdeal.brewmaster.model.CoffeeType;
 import com.gdeal.brewmaster.service.RecipeService;
 import org.junit.jupiter.api.Test;
@@ -19,8 +20,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@WebMvcTest
+@WebMvcTest(RecipeController.class)
 class RecipeControllerTest {
 
     @Autowired
@@ -62,5 +64,27 @@ class RecipeControllerTest {
             .andExpect(jsonPath("$.status").value(400))
             .andExpect(jsonPath("$.error").value("Bad Request"))
             .andExpect(jsonPath("$.message").value("Invalid sort field"));
+        }
+
+        @Test
+        void createRecipe_shouldReturn404_whenIngredientNotFound() throws Exception {
+
+                when(recipeService.createRecipe(any()))
+                        .thenThrow(new ResourceNotFoundException("Ingredient", 999L));
+
+    mockMvc.perform(post("/api/recipes")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content("""
+                {
+                    "type": "LATTE",
+                    "name": "Invalid Latte",
+                    "description": "Testing missing ingredient",
+                    "ingredientIds": [999]
+                }
+                """))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.status").value(404))
+            .andExpect(jsonPath("$.message")
+                    .value("Ingredient not found with id: 999"));
         }
 }

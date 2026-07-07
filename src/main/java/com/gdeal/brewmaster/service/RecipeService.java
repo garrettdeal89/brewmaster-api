@@ -4,6 +4,7 @@ import com.gdeal.brewmaster.dto.CreateRecipeRequest;
 import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.dto.RecipeQueryParams;
 import com.gdeal.brewmaster.exception.RecipeNotFoundException;
+import com.gdeal.brewmaster.exception.ResourceNotFoundException;
 import com.gdeal.brewmaster.model.Recipe;
 import com.gdeal.brewmaster.repository.IngredientRepository;
 import com.gdeal.brewmaster.repository.RecipeRepository;
@@ -128,8 +129,9 @@ public class RecipeService {
 
             Ingredient ingredient = ingredientRepository.findById(ingredientId)
                     .orElseThrow(() ->
-                            new RuntimeException(
-                                    "Ingredient not found: " + ingredientId));
+                             new ResourceNotFoundException(
+                                "Ingredient",
+                                    ingredientId));
 
             ingredients.add(ingredient);
         }
