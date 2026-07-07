@@ -5,7 +5,6 @@ import org.springframework.data.jpa.domain.Specification;
 import com.gdeal.brewmaster.model.CoffeeType;
 
 
-
 public class RecipeSpecifications {
 
     // Private constructor to prevent instantiation

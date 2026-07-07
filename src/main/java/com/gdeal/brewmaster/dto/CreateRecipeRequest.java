@@ -2,6 +2,9 @@ package com.gdeal.brewmaster.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+
+import java.util.Set;
+
 import com.gdeal.brewmaster.model.CoffeeType;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -33,6 +36,9 @@ public class CreateRecipeRequest {
     )
     private String description;
 
+    
+    private Set<Long> ingredientIds;
+
     public CreateRecipeRequest(){    
     }
 
@@ -58,5 +64,13 @@ public class CreateRecipeRequest {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Set<Long> getIngredientIds(){
+        return ingredientIds;
+    }
+
+    public void setIngredientIds(Set<Long> ingredientIds) {
+        this.ingredientIds = ingredientIds;
     }
 }

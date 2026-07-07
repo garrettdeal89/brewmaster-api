@@ -1,7 +1,7 @@
 package com.gdeal.brewmaster.dto;
 
 import com.gdeal.brewmaster.model.CoffeeType;
-
+import java.util.Set;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 //Documentation for RecipeDTO 
@@ -15,7 +15,7 @@ public class RecipeDTO {
     @Schema(
     description = "Unique identifier of the recipe",
     example = "1")
-    private long id;
+    private Long id;
     
     @Schema(
     description = "Type of coffee beverage"
@@ -34,15 +34,41 @@ public class RecipeDTO {
     )
     private String description;
 
-    public RecipeDTO(Long id, CoffeeType type, String name, String description) {
+    @Schema(
+    description = "List of ingredients used in the recipe",
+    example = "[\"Espresso\", \"Milk\"]"
+    )
+    private Set<String> ingredients;
 
-        this.id = id;
-        this.type = type;
-        this.name = name;
-        this.description = description;
+    public RecipeDTO(
+        Long id,
+        CoffeeType type,
+        String name,
+        String description,
+        Set<String> ingredients) {
+
+    this.id = id;
+    this.type = type;
+    this.name = name;
+    this.description = description;
+    this.ingredients = ingredients;
+}
+
+
+public RecipeDTO(
+        Long id,
+        CoffeeType type,
+        String name,
+        String description) {
+
+    this.id = id;
+    this.type = type;
+    this.name = name;
+    this.description = description;
+    this.ingredients = Set.of();
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -56,5 +82,9 @@ public class RecipeDTO {
 
     public String getDescription() {
         return description;
+    }
+
+    public Set<String> getIngredients() {
+        return ingredients;
     }
 }

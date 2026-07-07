@@ -14,9 +14,12 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.stream.Collectors;
+
 import org.springframework.data.jpa.domain.Specification;
 import com.gdeal.brewmaster.specification.RecipeSpecifications;
-import com.gdeal.brewmaster.model.CoffeeType;
+import com.gdeal.brewmaster.model.Ingredient;
+import java.util.stream.Collectors;
 
 @Service
 public class RecipeService {
@@ -112,13 +115,16 @@ public class RecipeService {
         recipe.setDescription(request.getDescription());
     }
 
-
     private RecipeDTO toDTO(Recipe recipe) {
         return new RecipeDTO(
-                recipe.getId(),
-                recipe.getType(),
-                recipe.getName(),
-                recipe.getDescription()
-        );
+        recipe.getId(),
+        recipe.getType(),
+        recipe.getName(),
+        recipe.getDescription(),
+        recipe.getIngredients()
+                .stream()
+                .map(Ingredient::getName)
+                .collect(Collectors.toSet())
+);
     }
 }
