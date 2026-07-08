@@ -15,9 +15,11 @@ com\gdeal\brewmaster\repository\IngredientRepository.class
 com\gdeal\brewmaster\exception\GlobalExceptionHandler.class
 com\gdeal\brewmaster\dto\CreateRecipeRequest.class
 com\gdeal\brewmaster\model\CoffeeType.class
+com\gdeal\brewmaster\repository\BrewMethodRepository.class
 com\gdeal\brewmaster\controller\RecipeController.class
 com\gdeal\brewmaster\repository\RecipeRepository.class
 com\gdeal\brewmaster\dto\RecipeQueryParams.class
+com\gdeal\brewmaster\model\BrewMethod.class
 com\gdeal\brewmaster\config\OpenApiConfig.class
 com\gdeal\brewmaster\controller\HealthController.class
 com\gdeal\brewmaster\service\RecipeService.class

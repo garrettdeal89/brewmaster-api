@@ -1,8 +1,10 @@
 package com.gdeal.brewmaster.config;
 
+import com.gdeal.brewmaster.model.BrewMethod;
 import com.gdeal.brewmaster.model.CoffeeType;
 import com.gdeal.brewmaster.model.Ingredient;
 import com.gdeal.brewmaster.model.Recipe;
+import com.gdeal.brewmaster.repository.BrewMethodRepository;
 import com.gdeal.brewmaster.repository.IngredientRepository;
 import com.gdeal.brewmaster.repository.RecipeRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -16,18 +18,22 @@ public class DataSeeder implements CommandLineRunner {
 
     private final RecipeRepository recipeRepository;
     private final IngredientRepository ingredientRepository;
+    private final BrewMethodRepository brewMethodRepository;
 
     public DataSeeder(
-            RecipeRepository recipeRepository,
-            IngredientRepository ingredientRepository) {
+        RecipeRepository recipeRepository,
+        IngredientRepository ingredientRepository,
+        BrewMethodRepository brewMethodRepository) {
 
-        this.recipeRepository = recipeRepository;
-        this.ingredientRepository = ingredientRepository;
-    }
+    this.recipeRepository = recipeRepository;
+    this.ingredientRepository = ingredientRepository;
+    this.brewMethodRepository = brewMethodRepository;
+}
 
     @Override
     public void run(String... args) {
 
+        
         // Seed ingredients
         if (ingredientRepository.count() == 0) {
 
@@ -45,6 +51,20 @@ public class DataSeeder implements CommandLineRunner {
 
             System.out.println("Seeded ingredients.");
         }
+
+         // Seed brew methods
+    if (brewMethodRepository.count() == 0) {
+
+        brewMethodRepository.saveAll(List.of(
+            new BrewMethod("Pressure"),
+            new BrewMethod("Immersion"),
+            new BrewMethod("Percolation"),
+            new BrewMethod("Vacuum"),
+            new BrewMethod("Cold Immersion")
+        ));
+
+        System.out.println("Seeded brew methods.");
+    }
 
         // Seed recipes
         if (recipeRepository.count() == 0) {
