@@ -151,4 +151,77 @@ void getAllRecipes_shouldReturnList() throws Exception {
                 .andExpect(jsonPath("$.data.ingredients",
                         containsInAnyOrder("Espresso", "Milk")));
         }
+
+        @Test
+void getAllRecipes_shouldFilterByIngredient() throws Exception {
+
+    Page<RecipeDTO> recipes = new PageImpl<>(List.of(
+            new RecipeDTO(
+                    1L,
+                    CoffeeType.LATTE,
+                    "Latte",
+                    "Espresso with steamed milk.",
+                    "Pressure",
+                    Set.of("Espresso", "Milk"))
+    ));
+
+    when(recipeService.getAllRecipes(any(RecipeQueryParams.class)))
+            .thenReturn(recipes);
+
+    mockMvc.perform(get("/api/recipes")
+            .param("ingredient", "Milk"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.content[0].name")
+                    .value("Latte"));
+}
+
+@Test
+void getAllRecipes_shouldFilterByBrewMethod() throws Exception {
+
+    Page<RecipeDTO> recipes = new PageImpl<>(List.of(
+            new RecipeDTO(
+                    1L,
+                    CoffeeType.LATTE,
+                    "Espresso",
+                    "Classic espresso.",
+                    "Pressure",
+                    Set.of("Espresso"))
+    ));
+
+    when(recipeService.getAllRecipes(any(RecipeQueryParams.class)))
+            .thenReturn(recipes);
+
+    mockMvc.perform(get("/api/recipes")
+            .param("brewMethod", "Pressure"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.content[0].brewMethod")
+                    .value("Pressure"));
+}
+
+@Test
+void getAllRecipes_shouldFilterByMultipleCriteria() throws Exception {
+
+    Page<RecipeDTO> recipes = new PageImpl<>(List.of(
+            new RecipeDTO(
+                    1L,
+                    CoffeeType.LATTE,
+                    "Latte",
+                    "Espresso with steamed milk.",
+                    "Pressure",
+                    Set.of("Espresso", "Milk"))
+    ));
+
+    when(recipeService.getAllRecipes(any(RecipeQueryParams.class)))
+            .thenReturn(recipes);
+
+    mockMvc.perform(get("/api/recipes")
+            .param("type", "LATTE")
+            .param("ingredient", "Milk")
+            .param("brewMethod", "Pressure"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.content[0].name")
+                    .value("Latte"))
+            .andExpect(jsonPath("$.data.content[0].brewMethod")
+                    .value("Pressure"));
+}
 }
