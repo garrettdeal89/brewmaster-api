@@ -27,20 +27,24 @@ public class RecipeSpecifications {
 
     public static Specification<Recipe> hasIngredient(String ingredientName) {
 
-        return (root, query, criteriaBuilder) ->
+    return (root, query, criteriaBuilder) -> {
 
-        criteriaBuilder.equal(
-            criteriaBuilder.lower(root.join("ingredients").get("name")),
-        ingredientName.toLowerCase());
-        
-    }
+        query.distinct(true);
+
+        return criteriaBuilder.equal(
+                criteriaBuilder.lower(
+                        root.join("ingredients").get("name")),
+                ingredientName.toLowerCase());
+    };
+}
 
     public static Specification<Recipe> hasBrewMethod(String brewMethodName) {
 
-        return (root, query, criteriaBuilder) ->
+    return (root, query, criteriaBuilder) ->
 
-        criteriaBuilder.equal(
-            criteriaBuilder.lower(root.get("name")),
-        brewMethodName.toLowerCase());
-    }
+            criteriaBuilder.equal(
+                    criteriaBuilder.lower(
+                            root.get("brewMethod").get("name")),
+                    brewMethodName.toLowerCase());
+}
 }

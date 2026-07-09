@@ -63,6 +63,8 @@ private static final Set<String> ALLOWED_SORT_FIELDS =
             params.getSize(),
             sort);
 
+
+
     // Build the specification based on the provided query parameters
     Specification<Recipe> spec = Specification.where(null);
 
@@ -74,6 +76,26 @@ private static final Set<String> ALLOWED_SORT_FIELDS =
     if (params.getType() != null) {
         spec = spec.and(
                 RecipeSpecifications.hasType(params.getType()));
+    }
+
+    //Ingredient Filter
+    if (params.getIngredient() != null
+        && !params.getIngredient().isBlank()) {
+
+            spec = spec.and(
+                RecipeSpecifications.hasIngredient(
+                    params.getIngredient()
+                ));
+        }
+
+    //Brew Method Filter
+    if (params.getBrewMethod() != null
+    && !params.getBrewMethod().isBlank()) {
+
+        spec = spec.and(
+            RecipeSpecifications.hasBrewMethod(
+                params.getBrewMethod()
+        ));
     }
 
     // Fetch the recipes based on the specification and pagination
