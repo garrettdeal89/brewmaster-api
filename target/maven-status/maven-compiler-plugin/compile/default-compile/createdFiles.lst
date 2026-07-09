@@ -1,3 +1,4 @@
+com\gdeal\brewmaster\service\BrewMethodService.class
 com\gdeal\brewmaster\dto\ApiError.class
 com\gdeal\brewmaster\dto\CreateIngredientRequest.class
 com\gdeal\brewmaster\exception\ResourceNotFoundException.class
@@ -9,9 +10,11 @@ com\gdeal\brewmaster\model\Ingredient.class
 com\gdeal\brewmaster\model\Recipe.class
 com\gdeal\brewmaster\controller\IngredientController.class
 com\gdeal\brewmaster\BrewmasterApplication.class
+com\gdeal\brewmaster\dto\BrewMethodDTO.class
 com\gdeal\brewmaster\specification\RecipeSpecifications.class
 com\gdeal\brewmaster\dto\RecipeDTO.class
 com\gdeal\brewmaster\repository\IngredientRepository.class
+com\gdeal\brewmaster\controller\BrewMethodController.class
 com\gdeal\brewmaster\exception\GlobalExceptionHandler.class
 com\gdeal\brewmaster\dto\CreateRecipeRequest.class
 com\gdeal\brewmaster\model\CoffeeType.class
