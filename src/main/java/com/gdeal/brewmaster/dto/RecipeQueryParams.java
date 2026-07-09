@@ -39,6 +39,18 @@ public class RecipeQueryParams {
     )
    
     private String sortField = "id";
+
+    @Schema(
+    description = "Optional ingredient used to filter recipes",
+    example = "Milk"
+)
+    private String ingredient;
+
+    @Schema(
+    description = "Optional brew method used to filter recipes",
+    example = "Pressure"
+)
+    private String brewMethod;
     
     //SortDirection Documentation
     @Schema(
@@ -71,6 +83,21 @@ public class RecipeQueryParams {
         this.name = name;
     }
 
+    public String getIngredient() {
+        return ingredient;
+    }
+
+    public void setIngredient(String ingredient) {
+        this.ingredient = ingredient;
+    }
+
+    public String getBrewMethod() {
+        return brewMethod;
+    }
+
+    public void setBrewMethod(String brewMethod) {
+        this.brewMethod = brewMethod;
+    }
 
 
     public RecipeQueryParams() {}
