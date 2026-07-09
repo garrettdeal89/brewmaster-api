@@ -65,7 +65,7 @@ public class DataSeeder implements CommandLineRunner {
 
         System.out.println("Seeded brew methods.");
     }
-
+    
         // Seed recipes
         if (recipeRepository.count() == 0) {
 

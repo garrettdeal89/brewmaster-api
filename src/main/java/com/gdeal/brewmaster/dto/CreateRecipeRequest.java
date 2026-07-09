@@ -39,7 +39,9 @@ public class CreateRecipeRequest {
     
     private Set<Long> ingredientIds;
 
-    public CreateRecipeRequest(){    
+    private Long brewMethodId;
+
+    public CreateRecipeRequest(){
     }
 
     public CoffeeType getType() {
@@ -72,5 +74,13 @@ public class CreateRecipeRequest {
 
     public void setIngredientIds(Set<Long> ingredientIds) {
         this.ingredientIds = ingredientIds;
+    }
+
+    public Long getBrewMethodId() {
+        return brewMethodId;
+    }
+
+    public void setBrewMethodId(Long brewMethodId) {
+        this.brewMethodId = brewMethodId;
     }
 }

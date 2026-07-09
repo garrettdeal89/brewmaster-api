@@ -40,17 +40,25 @@ public class RecipeDTO {
     )
     private Set<String> ingredients;
 
+    @Schema(
+        description = "Recommended Brewing Methpd",
+        example = "perculation"
+    )
+    private String brewMethod;
+
     public RecipeDTO(
         Long id,
         CoffeeType type,
         String name,
         String description,
+        String brewMethod,
         Set<String> ingredients) {
 
     this.id = id;
     this.type = type;
     this.name = name;
     this.description = description;
+    this.brewMethod = brewMethod;
     this.ingredients = ingredients;
 }
 
@@ -82,6 +90,10 @@ public RecipeDTO(
 
     public String getDescription() {
         return description;
+    }
+
+    public String getBrewMethod() {
+        return brewMethod;
     }
 
     public Set<String> getIngredients() {

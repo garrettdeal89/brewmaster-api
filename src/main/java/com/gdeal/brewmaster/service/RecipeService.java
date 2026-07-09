@@ -6,6 +6,7 @@ import com.gdeal.brewmaster.dto.RecipeQueryParams;
 import com.gdeal.brewmaster.exception.RecipeNotFoundException;
 import com.gdeal.brewmaster.exception.ResourceNotFoundException;
 import com.gdeal.brewmaster.model.Recipe;
+import com.gdeal.brewmaster.repository.BrewMethodRepository;
 import com.gdeal.brewmaster.repository.IngredientRepository;
 import com.gdeal.brewmaster.repository.RecipeRepository;
 
@@ -21,23 +22,28 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.jpa.domain.Specification;
 import com.gdeal.brewmaster.specification.RecipeSpecifications;
+import com.gdeal.brewmaster.model.BrewMethod;
 import com.gdeal.brewmaster.model.Ingredient;
 
 
 @Service
 public class RecipeService {
 
-   private final RecipeRepository recipeRepository;
-   private final IngredientRepository ingredientRepository;
+private final RecipeRepository recipeRepository;
+private final IngredientRepository ingredientRepository;
+private final BrewMethodRepository brewMethodRepository;
 
-   private static final Set<String> ALLOWED_SORT_FIELDS =
+private static final Set<String> ALLOWED_SORT_FIELDS =
         Set.of("id", "name", "type");
 
     public RecipeService(
-        RecipeRepository recipeRepository,  
-        IngredientRepository ingredientRepository) { 
+        RecipeRepository recipeRepository,
+        IngredientRepository ingredientRepository,
+        BrewMethodRepository brewMethodRepository){
+
         this.recipeRepository = recipeRepository;
         this.ingredientRepository = ingredientRepository;
+        this.brewMethodRepository = brewMethodRepository;
     }
 
     public Page<RecipeDTO> getAllRecipes(RecipeQueryParams params) {
@@ -121,6 +127,20 @@ public class RecipeService {
     recipe.setName(request.getName());
     recipe.setDescription(request.getDescription());
 
+    if (request.getBrewMethodId() != null) {
+
+    BrewMethod brewMethod = brewMethodRepository.findById(
+            request.getBrewMethodId()
+    )
+    .orElseThrow(() ->
+            new RuntimeException(
+                    "Brew method not found: "
+                    + request.getBrewMethodId()
+            ));
+
+    recipe.setBrewMethod(brewMethod);
+}
+
     if (request.getIngredientIds() != null) {
 
         Set<Ingredient> ingredients = new HashSet<>();
@@ -129,7 +149,7 @@ public class RecipeService {
 
             Ingredient ingredient = ingredientRepository.findById(ingredientId)
                     .orElseThrow(() ->
-                             new ResourceNotFoundException(
+                            new ResourceNotFoundException(
                                 "Ingredient",
                                     ingredientId));
 
@@ -146,6 +166,9 @@ public class RecipeService {
         recipe.getType(),
         recipe.getName(),
         recipe.getDescription(),
+        recipe.getBrewMethod() != null
+        ? recipe.getBrewMethod().getName()
+        : null,
         recipe.getIngredients()
                 .stream()
                 .map(Ingredient::getName)

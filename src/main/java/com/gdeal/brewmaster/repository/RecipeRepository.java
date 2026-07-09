@@ -16,7 +16,7 @@ public interface RecipeRepository extends JpaRepository<Recipe, Long>,
     JpaSpecificationExecutor<Recipe> {
 
     Page<Recipe> findByType(
-        CoffeeType type, 
+        CoffeeType type,
         Pageable pageable
     );
 }
