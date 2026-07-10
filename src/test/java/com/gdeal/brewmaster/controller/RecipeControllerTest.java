@@ -151,4 +151,27 @@ void getAllRecipes_shouldReturnList() throws Exception {
                 .andExpect(jsonPath("$.data.ingredients",
                         containsInAnyOrder("Espresso", "Milk")));
         }
+
+        @Test
+        void createRecipe_shouldReturn404_whenBrewMethodNotFound() throws Exception {
+
+        when(recipeService.createRecipe(any()))
+                .thenThrow(new ResourceNotFoundException("Brew Method", 999L));
+
+        mockMvc.perform(post("/api/recipes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                        "type": "LATTE",
+                        "name": "Latte",
+                        "description": "Testing missing brew method",
+                        "brewMethodId": 999,
+                        "ingredientIds": [1]
+                        }
+                        """))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message")
+                .value("Brew Method not found with id: 999"));
+        }
 }

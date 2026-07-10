@@ -133,9 +133,9 @@ private static final Set<String> ALLOWED_SORT_FIELDS =
             request.getBrewMethodId()
     )
     .orElseThrow(() ->
-            new RuntimeException(
-                    "Brew method not found: "
-                    + request.getBrewMethodId()
+            new ResourceNotFoundException(
+                    "Brew Method",
+                    request.getBrewMethodId()
             ));
 
     recipe.setBrewMethod(brewMethod);
