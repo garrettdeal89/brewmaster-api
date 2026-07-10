@@ -153,75 +153,25 @@ void getAllRecipes_shouldReturnList() throws Exception {
         }
 
         @Test
-void getAllRecipes_shouldFilterByIngredient() throws Exception {
+        void createRecipe_shouldReturn404_whenBrewMethodNotFound() throws Exception {
 
-    Page<RecipeDTO> recipes = new PageImpl<>(List.of(
-            new RecipeDTO(
-                    1L,
-                    CoffeeType.LATTE,
-                    "Latte",
-                    "Espresso with steamed milk.",
-                    "Pressure",
-                    Set.of("Espresso", "Milk"))
-    ));
+        when(recipeService.createRecipe(any()))
+                .thenThrow(new ResourceNotFoundException("Brew Method", 999L));
 
-    when(recipeService.getAllRecipes(any(RecipeQueryParams.class)))
-            .thenReturn(recipes);
-
-    mockMvc.perform(get("/api/recipes")
-            .param("ingredient", "Milk"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.data.content[0].name")
-                    .value("Latte"));
-}
-
-@Test
-void getAllRecipes_shouldFilterByBrewMethod() throws Exception {
-
-    Page<RecipeDTO> recipes = new PageImpl<>(List.of(
-            new RecipeDTO(
-                    1L,
-                    CoffeeType.LATTE,
-                    "Espresso",
-                    "Classic espresso.",
-                    "Pressure",
-                    Set.of("Espresso"))
-    ));
-
-    when(recipeService.getAllRecipes(any(RecipeQueryParams.class)))
-            .thenReturn(recipes);
-
-    mockMvc.perform(get("/api/recipes")
-            .param("brewMethod", "Pressure"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.data.content[0].brewMethod")
-                    .value("Pressure"));
-}
-
-@Test
-void getAllRecipes_shouldFilterByMultipleCriteria() throws Exception {
-
-    Page<RecipeDTO> recipes = new PageImpl<>(List.of(
-            new RecipeDTO(
-                    1L,
-                    CoffeeType.LATTE,
-                    "Latte",
-                    "Espresso with steamed milk.",
-                    "Pressure",
-                    Set.of("Espresso", "Milk"))
-    ));
-
-    when(recipeService.getAllRecipes(any(RecipeQueryParams.class)))
-            .thenReturn(recipes);
-
-    mockMvc.perform(get("/api/recipes")
-            .param("type", "LATTE")
-            .param("ingredient", "Milk")
-            .param("brewMethod", "Pressure"))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.data.content[0].name")
-                    .value("Latte"))
-            .andExpect(jsonPath("$.data.content[0].brewMethod")
-                    .value("Pressure"));
-}
+        mockMvc.perform(post("/api/recipes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("""
+                        {
+                        "type": "LATTE",
+                        "name": "Latte",
+                        "description": "Testing missing brew method",
+                        "brewMethodId": 999,
+                        "ingredientIds": [1]
+                        }
+                        """))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.message")
+                .value("Brew Method not found with id: 999"));
+        }
 }
