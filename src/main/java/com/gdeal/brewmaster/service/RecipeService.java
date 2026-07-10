@@ -155,10 +155,10 @@ private static final Set<String> ALLOWED_SORT_FIELDS =
             request.getBrewMethodId()
     )
     .orElseThrow(() ->
-            new ResourceNotFoundException(
-                    "Brew method",
-                    request.getBrewMethodId()
-            ));
+        new ResourceNotFoundException(
+                "Brew Method",
+                request.getBrewMethodId()
+        ));
 
     recipe.setBrewMethod(brewMethod);
 }
