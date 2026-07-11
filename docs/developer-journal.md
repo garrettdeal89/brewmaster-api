@@ -216,10 +216,22 @@
 - Improved scalability by adopting the Specification pattern.
 - Established a flexible foundation for future filters such as ingredients, roast level, etc.
 
-# Sprint 16: Ingredients Feature
+# Sprint x: PostgreSQL migration
 
-### Feature
-- 
+### Feature 
+- Replaced the H2 in-memory database with PostgreSQL.
+- Added PostgreSQL JDBC driver.
+- Introduced Spring profiles (application-dev.properties and application-test.properties).
+- Configured Docker Compose to provision a PostgreSQL 17 container.
+- Verified database persistence across application restarts.
+- Updated integration tests to use PostgreSQL instead of H2.
+- All existing tests continue to pass after the migration.
 
 ### Key Notes
+- Separating configuration into Spring profiles greatly simplifies environment management.
+- Docker Compose provides a repeatable local development environment with minimal setup.
+- Running tests against PostgreSQL provides higher confidence than relying on an in-memory database because behavior more closely matches production.
+
+
+
 -
