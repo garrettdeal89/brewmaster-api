@@ -1,5 +1,6 @@
 package com.gdeal.brewmaster.controller;
 
+import com.gdeal.brewmaster.config.SecurityConfig;
 import com.gdeal.brewmaster.dto.CreateRecipeRequest;
 import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.dto.RecipeQueryParams;
@@ -10,6 +11,7 @@ import com.gdeal.brewmaster.service.RecipeService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
@@ -31,6 +33,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(RecipeController.class)
+@Import(SecurityConfig.class)
 class RecipeControllerTest {
 
 @Autowired
