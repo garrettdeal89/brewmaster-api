@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
 public ResponseEntity<ApiError> handleRecipeNotFound(
         RecipeNotFoundException ex) {
 
-    ApiError error = new ApiError(
+        ApiError error = new ApiError(
             404,
             "Not Found",
             ex.getMessage());
@@ -73,4 +73,20 @@ public ResponseEntity<ApiError> handleIllegalArgument(
             .status(HttpStatus.NOT_FOUND)
             .body(response);
         }
+
+        @ExceptionHandler(ResourceAlreadyExistsException.class)
+        public ResponseEntity<ApiResponse<Void>> handleResourceAlreadyExists(
+
+                ResourceAlreadyExistsException ex) {
+
+                        ApiResponse<Void> response = new ApiResponse<>(
+                                HttpStatus.CONFLICT.value(),
+                                ex.getMessage(),
+                                null
+                        );
+
+                        return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(response);
+                }
 }

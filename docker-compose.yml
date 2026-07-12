@@ -57,6 +57,9 @@ services:
     ports:
       - "5050:80"
 
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
     depends_on:
       postgres:
         condition: service_healthy
@@ -64,3 +67,4 @@ services:
 
 volumes:
   postgres-data:
+  pgadmin-data:
