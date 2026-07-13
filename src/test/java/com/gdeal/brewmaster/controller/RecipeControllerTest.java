@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -26,24 +27,31 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+
 @WebMvcTest(RecipeController.class)
 @Import(SecurityConfig.class)
 class RecipeControllerTest {
 
-@Autowired
-private MockMvc mockMvc;
+    @Autowired
+    private MockMvc mockMvc;
 
-@MockitoBean
-private RecipeService recipeService;
+    @MockitoBean
+    private RecipeService recipeService;
 
-@Test
-void getAllRecipes_shouldReturnList() throws Exception {
+    @MockitoBean
+    private JwtDecoder jwtDecoder;
+
+
+    @Test
+    void getAllRecipes_shouldReturnList() throws Exception {
 
         Page<RecipeDTO> mockRecipes = new PageImpl<>(List.of(
                 new RecipeDTO(
@@ -60,13 +68,16 @@ void getAllRecipes_shouldReturnList() throws Exception {
                 )
         ));
 
-        when(recipeService.getAllRecipes(any(RecipeQueryParams.class)))
+        when(recipeService.getAllRecipes(
+                any(RecipeQueryParams.class)))
                 .thenReturn(mockRecipes);
 
         mockMvc.perform(get("/api/recipes"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(content().contentType(
+                        MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status")
+                        .value(200))
                 .andExpect(jsonPath("$.message")
                         .value("Recipes retrieved successfully"))
                 .andExpect(jsonPath("$.data.content.length()")
@@ -75,46 +86,72 @@ void getAllRecipes_shouldReturnList() throws Exception {
                         .value("Latte"))
                 .andExpect(jsonPath("$.data.content[1].name")
                         .value("Cappuccino"));
-        }
+    }
 
-        @Test
-        void getAllRecipes_shouldReturn400_whenInvalidSortField() throws Exception {
 
-        when(recipeService.getAllRecipes(any(RecipeQueryParams.class)))
-                .thenThrow(new IllegalArgumentException("Invalid sort field"));
+    @Test
+    void getAllRecipes_shouldReturn400_whenInvalidSortField()
+            throws Exception {
+
+        when(recipeService.getAllRecipes(
+                any(RecipeQueryParams.class)))
+                .thenThrow(
+                        new IllegalArgumentException(
+                                "Invalid sort field"
+                        )
+                );
 
         mockMvc.perform(get("/api/recipes")
                         .param("sortField", "invalid"))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.status").value(400))
-                .andExpect(jsonPath("$.error").value("Bad Request"))
-                .andExpect(jsonPath("$.message").value("Invalid sort field"));
-        }
+                .andExpect(jsonPath("$.status")
+                        .value(400))
+                .andExpect(jsonPath("$.error")
+                        .value("Bad Request"))
+                .andExpect(jsonPath("$.message")
+                        .value("Invalid sort field"));
+    }
 
-        @Test
-        void createRecipe_shouldReturn404_whenIngredientNotFound() throws Exception {
+
+    @Test
+    void createRecipe_shouldReturn404_whenIngredientNotFound()
+            throws Exception {
 
         when(recipeService.createRecipe(any()))
-                .thenThrow(new ResourceNotFoundException("Ingredient", 999L));
+                .thenThrow(
+                        new ResourceNotFoundException(
+                                "Ingredient",
+                                999L
+                        )
+                );
 
         mockMvc.perform(post("/api/recipes")
+                        .with(jwt().jwt(token ->
+                                token.claim("role", "USER")
+                        ))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                "type": "LATTE",
-                                "name": "Invalid Latte",
-                                "description": "Testing missing ingredient",
-                                "ingredientIds": [999]
+                                  "type": "LATTE",
+                                  "name": "Invalid Latte",
+                                  "description": "Testing missing ingredient",
+                                  "brewMethodId": 1,
+                                  "ingredientIds": [999]
                                 }
                                 """))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.status")
+                        .value(404))
                 .andExpect(jsonPath("$.message")
-                        .value("Ingredient not found with id: 999"));
-        }
+                        .value(
+                                "Ingredient not found with id: 999"
+                        ));
+    }
 
-        @Test
-        void updateRecipe_shouldReturn200_withIngredients() throws Exception {
+
+    @Test
+    void updateRecipe_shouldReturn200_withIngredients()
+            throws Exception {
 
         RecipeDTO updatedRecipe = new RecipeDTO(
                 1L,
@@ -131,20 +168,25 @@ void getAllRecipes_shouldReturnList() throws Exception {
                 .thenReturn(updatedRecipe);
 
         mockMvc.perform(put("/api/recipes/1")
+                        .with(jwt().jwt(token ->
+                                token.claim("role", "USER")
+                        ))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("""
                                 {
-                                "type": "LATTE",
-                                "name": "Updated Latte",
-                                "description": "Espresso with steamed milk.",
-                                "ingredientIds": [
-                                        1,
-                                        2
-                                ]
+                                  "type": "LATTE",
+                                  "name": "Updated Latte",
+                                  "description": "Espresso with steamed milk.",
+                                  "brewMethodId": 1,
+                                  "ingredientIds": [
+                                    1,
+                                    2
+                                  ]
                                 }
                                 """))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(jsonPath("$.status")
+                        .value(200))
                 .andExpect(jsonPath("$.message")
                         .value("Recipe updated successfully"))
                 .andExpect(jsonPath("$.data.name")
@@ -152,29 +194,67 @@ void getAllRecipes_shouldReturnList() throws Exception {
                 .andExpect(jsonPath("$.data.brewMethod")
                         .value("Pressure"))
                 .andExpect(jsonPath("$.data.ingredients",
-                        containsInAnyOrder("Espresso", "Milk")));
-        }
+                        containsInAnyOrder(
+                                "Espresso",
+                                "Milk"
+                        )));
+    }
 
-        @Test
-        void createRecipe_shouldReturn404_whenBrewMethodNotFound() throws Exception {
+
+    @Test
+    void createRecipe_shouldReturn404_whenBrewMethodNotFound()
+            throws Exception {
 
         when(recipeService.createRecipe(any()))
-                .thenThrow(new ResourceNotFoundException("Brew Method", 999L));
+                .thenThrow(
+                        new ResourceNotFoundException(
+                                "Brew Method",
+                                999L
+                        )
+                );
 
         mockMvc.perform(post("/api/recipes")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("""
-                        {
-                        "type": "LATTE",
-                        "name": "Latte",
-                        "description": "Testing missing brew method",
-                        "brewMethodId": 999,
-                        "ingredientIds": [1]
-                        }
-                        """))
+                        .with(jwt().jwt(token ->
+                                token.claim("role", "USER")
+                        ))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "type": "LATTE",
+                                  "name": "Latte",
+                                  "description": "Testing missing brew method",
+                                  "brewMethodId": 999,
+                                  "ingredientIds": [1]
+                                }
+                                """))
                 .andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.status").value(404))
+                .andExpect(jsonPath("$.status")
+                        .value(404))
                 .andExpect(jsonPath("$.message")
-                .value("Brew Method not found with id: 999"));
-        }
+                        .value(
+                                "Brew Method not found with id: 999"
+                        ));
+    }
+
+
+    @Test
+    void createRecipe_shouldReturn401_withoutJwt()
+            throws Exception {
+
+        mockMvc.perform(post("/api/recipes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("""
+                                {
+                                  "type": "LATTE",
+                                  "name": "Unauthorized Latte",
+                                  "description": "Testing authentication.",
+                                  "brewMethodId": 1,
+                                  "ingredientIds": [
+                                    1,
+                                    2
+                                  ]
+                                }
+                                """))
+                .andExpect(status().isUnauthorized());
+    }
 }
