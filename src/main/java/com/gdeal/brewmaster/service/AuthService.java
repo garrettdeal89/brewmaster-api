@@ -10,19 +10,25 @@ import com.gdeal.brewmaster.model.Role;
 import com.gdeal.brewmaster.model.UserAccount;
 import com.gdeal.brewmaster.repository.UserAccountRepository;
 
+import com.gdeal.brewmaster.dto.LoginRequest;
+import com.gdeal.brewmaster.dto.LoginResponse;
+import com.gdeal.brewmaster.exception.InvalidCredentialsException;
+
 @Service
 public class AuthService {
     
     private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
 
     public AuthService(
 
         UserAccountRepository userAccountRepository,
-        PasswordEncoder passwordEncoder) {
+        PasswordEncoder passwordEncoder, JwtService jwtService) {
 
             this.userAccountRepository = userAccountRepository;
             this.passwordEncoder = passwordEncoder;
+            this.jwtService = jwtService;
         }
 
         public UserAccountDTO register(RegisterRequest request) {
@@ -50,6 +56,30 @@ public class AuthService {
             return toDTO(savedUser);
         }
 
+    public LoginResponse login(LoginRequest request) {
+
+        UserAccount userAccount = userAccountRepository
+            .findByUsername(request.getUsername())
+            .orElseThrow(InvalidCredentialsException::new);
+        
+        boolean passwordMatches = passwordEncoder.matches(
+            request.getPassword(),
+            userAccount.getPasswordHash()
+        );
+
+        if (!passwordMatches) {
+
+            throw new InvalidCredentialsException();
+        }
+
+        String accessToken = jwtService.generateToken(userAccount);
+
+        return new LoginResponse(
+            accessToken,
+            "Bearer",
+            jwtService.getExpirationSeconds()
+        );
+    }
         private UserAccountDTO toDTO(UserAccount userAccount) {
 
             return new UserAccountDTO(

@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import com.gdeal.brewmaster.dto.LoginRequest;
+import com.gdeal.brewmaster.dto.LoginResponse;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -54,5 +57,25 @@ public class AuthController {
             .status(HttpStatus.CREATED)
             .body(response
             );
+        }
+
+    @Operation(summary = "Authenticate a user and return a JWT")
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<LoginResponse>> login(
+
+        @Valid
+        @RequestBody
+        LoginRequest request) {
+
+            LoginResponse loginResponse = authService.login(request);
+
+            ApiResponse<LoginResponse> response = new ApiResponse<>(
+
+                HttpStatus.OK.value(),
+                "Login successful.",
+                loginResponse
+            );
+
+            return ResponseEntity.ok(response);
         }
 }

@@ -13,7 +13,7 @@ public class LoginRequest {
     private String username;
 
     @NotBlank(message = "Password is required.")
-    @Schema(example = "uniquePassword123!")
+    @Schema(example = "uniquePassword321!")
     private String password;
 
     public LoginRequest() {}

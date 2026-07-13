@@ -89,4 +89,21 @@ public ResponseEntity<ApiError> handleIllegalArgument(
                         .status(HttpStatus.CONFLICT)
                         .body(response);
                 }
+
+        @ExceptionHandler(InvalidCredentialsException.class)
+        public ResponseEntity<ApiResponse<Void>> handleInvalidCredentials (
+
+                InvalidCredentialsException ex) {
+
+                        ApiResponse<Void> response = new ApiResponse<>(
+
+                                HttpStatus.UNAUTHORIZED.value(),
+                                ex.getMessage(),
+                                null
+                        );
+
+                        return ResponseEntity
+                        .status(HttpStatus.UNAUTHORIZED)
+                        .body(response);
+                }
 }
