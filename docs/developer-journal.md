@@ -233,5 +233,39 @@
 - Running tests against PostgreSQL provides higher confidence than relying on an in-memory database because behavior more closely matches production.
 
 
+## Sprint 8 — Security and JWT
 
+Implemented authentication and authorization using Spring Security and JWT.
+
+### Completed
+
+- Added Spring Security and OAuth2 Resource Server support.
+- Added user registration with unique username and email validation.
+- Added BCrypt password hashing.
+- Added login endpoint with JWT token generation.
+- Added JWT signature, issuer, and expiration validation.
+- Added role claims and Spring Security authority mapping.
+- Protected recipe and ingredient write operations.
+- Kept authentication, health, Swagger, and read endpoints public.
+- Added Swagger bearer-token authorization support.
+- Added controller coverage for authenticated and unauthenticated requests.
+- Verified all tests pass.
+
+## Sprint 9: Security Design
+
+### Features
+Public endpoints:
+
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `GET /api/health`
+- Recipe, ingredient, and brew-method read endpoints
+- Swagger and OpenAPI endpoints
+
+Authenticated endpoints:
+
+- Recipe create, update, and delete
+- Ingredient create, update, and delete
+
+Passwords are stored only as BCrypt hashes. JWTs include the username, user ID, role, issuer, issued-at time, and expiration time.
 -
