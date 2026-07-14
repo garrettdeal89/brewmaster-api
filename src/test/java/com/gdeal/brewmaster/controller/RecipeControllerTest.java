@@ -74,24 +74,29 @@ class RecipeControllerTest {
 
         mockMvc.perform(get("/api/recipes"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(
-                        MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status")
-                        .value(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.message")
-                        .value("Recipes retrieved successfully"))
+                .value("Recipes retrieved successfully"))
                 .andExpect(jsonPath("$.data.content.length()")
-                        .value(2))
+                .value(2))
                 .andExpect(jsonPath("$.data.content[0].name")
-                        .value("Latte"))
+                .value("Latte"))
                 .andExpect(jsonPath("$.data.content[1].name")
-                        .value("Cappuccino"));
-    }
+                .value("Cappuccino"))
+                .andExpect(jsonPath("$.data.page").value(0))
+                .andExpect(jsonPath("$.data.size").value(2))
+                .andExpect(jsonPath("$.data.totalElements").value(2))
+                .andExpect(jsonPath("$.data.totalPages").value(1))
+                .andExpect(jsonPath("$.data.first").value(true))
+                .andExpect(jsonPath("$.data.last").value(true))
+                .andExpect(jsonPath("$.data.empty").value(false));
+        }
 
 
-    @Test
-    void getAllRecipes_shouldReturn400_whenInvalidSortField()
-            throws Exception {
+@Test
+        void getAllRecipes_shouldReturn400_whenInvalidSortField()
+                        throws Exception {
 
         when(recipeService.getAllRecipes(
                 any(RecipeQueryParams.class)))
