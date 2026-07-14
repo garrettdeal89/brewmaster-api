@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import com.gdeal.brewmaster.dto.ApiResponse;
 import com.gdeal.brewmaster.dto.CreateRecipeRequest;
+import com.gdeal.brewmaster.dto.PageResponse;
+
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -67,18 +69,35 @@ public class RecipeController {
 
 // GET all recipes with pagination and sorting
     @GetMapping
-    public ResponseEntity<ApiResponse<Page<RecipeDTO>>> getAllRecipes(
+    public ResponseEntity<ApiResponse<PageResponse<RecipeDTO>>> getAllRecipes(
 
     @Parameter(description = "Query parameters for pagination, sorting, and filtering")
     @Valid RecipeQueryParams params) {
 
     Page<RecipeDTO> recipes = recipeService.getAllRecipes(params);
 
-    ApiResponse<Page<RecipeDTO>> response =
-            new ApiResponse<>(200, "Recipes retrieved successfully", recipes);
+    PageResponse<RecipeDTO> pageResponse = new PageResponse<>(
 
-    return ResponseEntity.ok(response);
+        recipes.getContent(),
+        recipes.getNumber(),
+        recipes.getSize(),
+        recipes.getTotalElements(),
+        recipes.getTotalPages(),
+        recipes.isFirst(),
+        recipes.isLast(),
+        recipes.isEmpty()
+    );
+
+    return ResponseEntity.ok(
+
+        new ApiResponse<>(
+            200,
+            "Recipes retrieved successfully",
+            pageResponse
+        )
+    );
 }
+
 // GET by ID
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<RecipeDTO>> getRecipeById(@PathVariable Long id) {
