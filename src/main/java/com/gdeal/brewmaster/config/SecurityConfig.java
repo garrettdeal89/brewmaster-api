@@ -59,7 +59,8 @@ public class SecurityConfig {
                                 HttpMethod.GET,
                                 "/api/recipes/**",
                                 "/api/ingredients/**",
-                                "/api/brew-methods/**"
+                                "/api/brew-methods/**",
+                                "/api/shared-recipes/**"
                         ).permitAll()
 
                         //All other API operations require authentication

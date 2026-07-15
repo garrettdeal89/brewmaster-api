@@ -2,11 +2,15 @@ package com.gdeal.brewmaster.service;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.dto.RecipeShareDTO;
 import com.gdeal.brewmaster.exception.RecipeNotFoundException;
+import com.gdeal.brewmaster.exception.ResourceNotFoundException;
+import com.gdeal.brewmaster.model.Ingredient;
 import com.gdeal.brewmaster.model.Recipe;
 import com.gdeal.brewmaster.model.RecipeShare;
 import com.gdeal.brewmaster.repository.RecipeRepository;
@@ -32,7 +36,7 @@ public class RecipeShareService {
         }
 
     
-    @Transactional
+    @org.springframework.transaction.annotation.Transactional
     public RecipeShareDTO createShareLink(Long recipeId) {
 
         Recipe recipe = recipeRepository.findById(recipeId).orElseThrow(() ->
@@ -50,6 +54,24 @@ public class RecipeShareService {
 
     return toDTO(savedShare);
     }
+    
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+public RecipeDTO getSharedRecipe(UUID token) {
+
+    RecipeShare recipeShare = recipeShareRepository.findByToken(token).orElseThrow(() ->
+
+    new ResourceNotFoundException(
+
+        "Recipe Share",
+        token
+    )
+    );
+
+    return toRecipeDTO(recipeShare.getRecipe());
+}
+
+
+
 
     private RecipeShareDTO toDTO(RecipeShare recipeShare) {
 
@@ -58,6 +80,19 @@ public class RecipeShareService {
             recipeShare.getToken(),
             SHARED_RECIPE_PATH + recipeShare.getToken(),
             recipeShare.getCreatedAt()
+        );
+    }
+
+    private RecipeDTO toRecipeDTO(Recipe recipe) {
+
+        return new RecipeDTO(
+
+            recipe.getId(),
+            recipe.getType(),
+            recipe.getName(),
+            recipe.getDescription(),
+            recipe.getBrewMethod() != null ? recipe.getBrewMethod().getName() : null,
+            recipe.getIngredients().stream().map(Ingredient::getName).collect(Collectors.toSet())
         );
     }
 
