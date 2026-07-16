@@ -2,6 +2,8 @@ package com.gdeal.brewmaster.controller;
 
 import com.gdeal.brewmaster.config.SecurityConfig;
 import com.gdeal.brewmaster.dto.RecipeExportResult;
+import com.gdeal.brewmaster.security.RestAccessDeniedHandler;
+import com.gdeal.brewmaster.security.RestAuthenticationEntryPoint;
 import com.gdeal.brewmaster.service.RecipeExportService;
 
 import org.junit.jupiter.api.Test;
@@ -25,7 +27,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(RecipeExportController.class)
-@Import(SecurityConfig.class)
+@Import({
+        SecurityConfig.class,
+        RestAuthenticationEntryPoint.class,
+        RestAccessDeniedHandler.class
+})
 class RecipeExportControllerTest {
 
     @Autowired
@@ -41,20 +47,21 @@ class RecipeExportControllerTest {
     void exportRecipe_shouldReturnJsonDownload() throws Exception {
 
         String json = """
-            {
-                "id": 1,
-                "type": "LATTE",
-                "name": "Latte",
-                "description": "Espresso with steamed milk.",
-                "brewMethod": "Pressure",
-                "ingredients": [
+                {
+                  "id": 1,
+                  "type": "LATTE",
+                  "name": "Latte",
+                  "description": "Espresso with steamed milk.",
+                  "brewMethod": "Pressure",
+                  "ingredients": [
                     "Espresso",
                     "Milk"
-                ]
+                  ]
                 }
                 """;
 
-        byte[] content = json.getBytes(StandardCharsets.UTF_8);
+        byte[] content =
+                json.getBytes(StandardCharsets.UTF_8);
 
         RecipeExportResult exportResult =
                 new RecipeExportResult(
@@ -67,10 +74,13 @@ class RecipeExportControllerTest {
 
         mockMvc.perform(get("/api/recipes/1/export"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(content().contentType(
+                        MediaType.APPLICATION_JSON))
                 .andExpect(header().string(
                         "Content-Disposition",
-                        containsString("filename*=UTF-8''latte.json")
+                        containsString(
+                                "filename*=UTF-8''latte.json"
+                        )
                 ))
                 .andExpect(header().longValue(
                         "Content-Length",

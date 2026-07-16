@@ -12,6 +12,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import com.gdeal.brewmaster.security.RestAccessDeniedHandler;
+import com.gdeal.brewmaster.security.RestAuthenticationEntryPoint;
 
 @Configuration
 public class SecurityConfig {
@@ -20,9 +22,13 @@ public class SecurityConfig {
         @Bean
         public SecurityFilterChain securityFilterChain (
 
-        HttpSecurity http) throws Exception {
+                HttpSecurity http,
+                RestAuthenticationEntryPoint authenticationEntryPoint,
+                RestAccessDeniedHandler accessDeniedHandler
+        )
+                throws Exception {
 
-        http
+                http
                 // REST APIs using JWT do not use browser-based CSRF tokens.
                 .csrf(csrf -> csrf.disable())
 
@@ -32,6 +38,11 @@ public class SecurityConfig {
                                 SessionCreationPolicy.STATELESS
                 )
         )
+
+                .exceptionHandling(exceptions -> exceptions
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler)
+                )
 
                 // Authentication rules will be tightened after JWT is added.
                 .authorizeHttpRequests(authorize -> authorize
@@ -51,7 +62,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
-                                "v3/api-docs/**"
+                                "/v3/api-docs/**"
                         ).permitAll()
 
                         //public read operations
@@ -70,11 +81,12 @@ public class SecurityConfig {
 
                         .anyRequest().permitAll()
         )
-                .oauth2ResourceServer(oauth2 ->
-
-                        oauth2.jwt(jwt ->
-                                jwt.jwtAuthenticationConverter(
-                                        jwtAuthenticationConverter()
+                        .oauth2ResourceServer(oauth2 -> oauth2
+                                .authenticationEntryPoint(authenticationEntryPoint)
+                                .accessDeniedHandler(accessDeniedHandler)
+                                .jwt(jwt ->
+                                        jwt.jwtAuthenticationConverter(
+                                                jwtAuthenticationConverter()
                                 )
                         )
                 )

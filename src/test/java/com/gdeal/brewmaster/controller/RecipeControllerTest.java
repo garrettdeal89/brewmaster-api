@@ -6,6 +6,8 @@ import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.dto.RecipeQueryParams;
 import com.gdeal.brewmaster.exception.ResourceNotFoundException;
 import com.gdeal.brewmaster.model.CoffeeType;
+import com.gdeal.brewmaster.security.RestAccessDeniedHandler;
+import com.gdeal.brewmaster.security.RestAuthenticationEntryPoint;
 import com.gdeal.brewmaster.service.RecipeService;
 
 import org.junit.jupiter.api.Test;
@@ -27,17 +29,29 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
+import static org.springframework.security.test.web.servlet.request
+        .SecurityMockMvcRequestPostProcessors.jwt;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request
+        .MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request
+        .MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request
+        .MockMvcRequestBuilders.put;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
+import static org.springframework.test.web.servlet.result
+        .MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result
+        .MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result
+        .MockMvcResultMatchers.status;
 
 @WebMvcTest(RecipeController.class)
-@Import(SecurityConfig.class)
+@Import({
+        SecurityConfig.class,
+        RestAuthenticationEntryPoint.class,
+        RestAccessDeniedHandler.class
+})
 class RecipeControllerTest {
 
     @Autowired
@@ -48,7 +62,6 @@ class RecipeControllerTest {
 
     @MockitoBean
     private JwtDecoder jwtDecoder;
-
 
     @Test
     void getAllRecipes_shouldReturnList() throws Exception {
@@ -74,29 +87,37 @@ class RecipeControllerTest {
 
         mockMvc.perform(get("/api/recipes"))
                 .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.status").value(200))
+                .andExpect(content().contentType(
+                        MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status")
+                        .value(200))
                 .andExpect(jsonPath("$.message")
-                .value("Recipes retrieved successfully"))
+                        .value("Recipes retrieved successfully"))
                 .andExpect(jsonPath("$.data.content.length()")
-                .value(2))
+                        .value(2))
                 .andExpect(jsonPath("$.data.content[0].name")
-                .value("Latte"))
+                        .value("Latte"))
                 .andExpect(jsonPath("$.data.content[1].name")
-                .value("Cappuccino"))
-                .andExpect(jsonPath("$.data.page").value(0))
-                .andExpect(jsonPath("$.data.size").value(2))
-                .andExpect(jsonPath("$.data.totalElements").value(2))
-                .andExpect(jsonPath("$.data.totalPages").value(1))
-                .andExpect(jsonPath("$.data.first").value(true))
-                .andExpect(jsonPath("$.data.last").value(true))
-                .andExpect(jsonPath("$.data.empty").value(false));
-        }
+                        .value("Cappuccino"))
+                .andExpect(jsonPath("$.data.page")
+                        .value(0))
+                .andExpect(jsonPath("$.data.size")
+                        .value(2))
+                .andExpect(jsonPath("$.data.totalElements")
+                        .value(2))
+                .andExpect(jsonPath("$.data.totalPages")
+                        .value(1))
+                .andExpect(jsonPath("$.data.first")
+                        .value(true))
+                .andExpect(jsonPath("$.data.last")
+                        .value(true))
+                .andExpect(jsonPath("$.data.empty")
+                        .value(false));
+    }
 
-
-@Test
-        void getAllRecipes_shouldReturn400_whenInvalidSortField()
-                        throws Exception {
+    @Test
+    void getAllRecipes_shouldReturn400_whenInvalidSortField()
+            throws Exception {
 
         when(recipeService.getAllRecipes(
                 any(RecipeQueryParams.class)))
@@ -116,7 +137,6 @@ class RecipeControllerTest {
                 .andExpect(jsonPath("$.message")
                         .value("Invalid sort field"));
     }
-
 
     @Test
     void createRecipe_shouldReturn404_whenIngredientNotFound()
@@ -152,7 +172,6 @@ class RecipeControllerTest {
                                 "Ingredient not found with id: 999"
                         ));
     }
-
 
     @Test
     void updateRecipe_shouldReturn200_withIngredients()
@@ -198,13 +217,14 @@ class RecipeControllerTest {
                         .value("Updated Latte"))
                 .andExpect(jsonPath("$.data.brewMethod")
                         .value("Pressure"))
-                .andExpect(jsonPath("$.data.ingredients",
+                .andExpect(jsonPath(
+                        "$.data.ingredients",
                         containsInAnyOrder(
                                 "Espresso",
                                 "Milk"
-                        )));
+                        )
+                ));
     }
-
 
     @Test
     void createRecipe_shouldReturn404_whenBrewMethodNotFound()
@@ -241,7 +261,6 @@ class RecipeControllerTest {
                         ));
     }
 
-
     @Test
     void createRecipe_shouldReturn401_withoutJwt()
             throws Exception {
@@ -260,6 +279,16 @@ class RecipeControllerTest {
                                   ]
                                 }
                                 """))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType(
+                        MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status")
+                        .value(401))
+                .andExpect(jsonPath("$.error")
+                        .value("Unauthorized"))
+                .andExpect(jsonPath("$.message")
+                        .value(
+                                "Authentication is required to access this resource."
+                        ));
     }
 }

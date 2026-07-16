@@ -4,6 +4,8 @@ import com.gdeal.brewmaster.config.SecurityConfig;
 import com.gdeal.brewmaster.dto.RecipeDTO;
 import com.gdeal.brewmaster.dto.RecipeShareDTO;
 import com.gdeal.brewmaster.model.CoffeeType;
+import com.gdeal.brewmaster.security.RestAccessDeniedHandler;
+import com.gdeal.brewmaster.security.RestAuthenticationEntryPoint;
 import com.gdeal.brewmaster.service.RecipeShareService;
 
 import org.junit.jupiter.api.Test;
@@ -39,7 +41,11 @@ import static org.springframework.test.web.servlet.result
         .MockMvcResultMatchers.status;
 
 @WebMvcTest(RecipeShareController.class)
-@Import(SecurityConfig.class)
+@Import({
+        SecurityConfig.class,
+        RestAuthenticationEntryPoint.class,
+        RestAccessDeniedHandler.class
+})
 class RecipeShareControllerTest {
 
     @Autowired
@@ -60,7 +66,14 @@ class RecipeShareControllerTest {
         );
 
         LocalDateTime createdAt =
-                LocalDateTime.of(2026, 7, 15, 17, 8, 55);
+                LocalDateTime.of(
+                        2026,
+                        7,
+                        15,
+                        17,
+                        8,
+                        55
+                );
 
         RecipeShareDTO shareDTO = new RecipeShareDTO(
                 token,
@@ -103,7 +116,17 @@ class RecipeShareControllerTest {
             throws Exception {
 
         mockMvc.perform(post("/api/recipes/1/share"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().contentType(
+                        MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.status")
+                        .value(401))
+                .andExpect(jsonPath("$.error")
+                        .value("Unauthorized"))
+                .andExpect(jsonPath("$.message")
+                        .value(
+                                "Authentication is required to access this resource."
+                        ));
     }
 
     @Test
@@ -147,7 +170,8 @@ class RecipeShareControllerTest {
                         .value("Americano"))
                 .andExpect(jsonPath("$.data.brewMethod")
                         .value("Pressure"))
-                .andExpect(jsonPath("$.data.ingredients.length()")
-                        .value(2));
+                .andExpect(jsonPath(
+                        "$.data.ingredients.length()"
+                ).value(2));
     }
 }

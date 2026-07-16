@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 import org.springframework.http.HttpStatus;
 
 
@@ -135,4 +138,47 @@ public ResponseEntity<ApiError> handleRecipeNotFound(
                                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
                                 .body(response);
                 }
+        
+        @ExceptionHandler(HttpMessageNotReadableException.class)
+        public ResponseEntity<ApiError> handleUnreadableMessage(
+                HttpMessageNotReadableException ex) {
+
+        ApiError error = new ApiError(
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                "Request body contains malformed or invalid JSON."
+        );
+
+        return ResponseEntity
+                .badRequest()
+                .body(error);
+        }
+
+        @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+        public ResponseEntity<ApiError> handleTypeMismatch(
+                MethodArgumentTypeMismatchException ex) {
+
+        String message;
+
+        if (ex.getRequiredType() != null
+                && ex.getRequiredType().equals(java.util.UUID.class)) {
+
+                message = "Invalid UUID value for parameter: "
+                        + ex.getName();
+
+        } else {
+                message = "Invalid value for parameter: "
+                        + ex.getName();
+        }
+
+        ApiError error = new ApiError(
+                HttpStatus.BAD_REQUEST.value(),
+                "Bad Request",
+                message
+        );
+
+        return ResponseEntity
+                .badRequest()
+                .body(error);
+        }
 }
