@@ -106,4 +106,21 @@ public ResponseEntity<ApiError> handleIllegalArgument(
                         .status(HttpStatus.UNAUTHORIZED)
                         .body(response);
                 }
+        
+        @ExceptionHandler(RecipeExportException.class)
+        public ResponseEntity<ApiResponse<Void>> handleRecipeExportException(
+
+                RecipeExportException ex) {
+
+                        ApiResponse<Void> response = new ApiResponse<>(
+
+                                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                                ex.getMessage(),
+                                null
+                        );
+
+                        return ResponseEntity
+                                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                .body(response);
+                }
 }
