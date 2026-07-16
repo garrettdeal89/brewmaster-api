@@ -5,7 +5,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.http.ResponseEntity;
 
-import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 
@@ -21,57 +22,68 @@ public ResponseEntity<ApiError> handleRecipeNotFound(
         RecipeNotFoundException ex) {
 
         ApiError error = new ApiError(
-            404,
-            "Not Found",
-            ex.getMessage());
+                404,
+                "Not Found",
+                ex.getMessage());
 
-    return ResponseEntity.status(HttpStatus.NOT_FOUND)
-            .body(error);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(error);
 }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-public ResponseEntity<ApiError> handleIllegalArgument(
-        IllegalArgumentException ex) {
+        @ExceptionHandler(IllegalArgumentException.class)
+        public ResponseEntity<ApiError> handleIllegalArgument(
+                IllegalArgumentException ex) {
 
-    ApiError error = new ApiError(
-            400,
-            "Bad Request",
-            ex.getMessage());
+        ApiError error = new ApiError(
+                400,
+                "Bad Request",
+                ex.getMessage());
 
-    return ResponseEntity.badRequest()
-            .body(error);
+        return ResponseEntity.badRequest()
+                .body(error);
 }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleValidationException(
+        @ExceptionHandler(MethodArgumentNotValidException.class)
+        public ResponseEntity<ApiError> handleValidationException(
         MethodArgumentNotValidException ex) {
 
-    String message = ex.getBindingResult()
-            .getFieldError()
-            .getDefaultMessage();
+        Map<String, String> fieldErrors =
+                new LinkedHashMap<>();
 
-    ApiError error = new ApiError(
-            400,
-            "Bad Request",
-            message);
+        ex.getBindingResult()
+                .getFieldErrors()
+                .forEach(fieldError ->
+                        fieldErrors.putIfAbsent(
+                                fieldError.getField(),
+                                fieldError.getDefaultMessage()
+                        )
+                );
 
-    return ResponseEntity.badRequest()
-            .body(error);
-    }
+        ApiError error = new ApiError(
+                HttpStatus.BAD_REQUEST.value(),
+                "Validation Failed",
+                "Request validation failed",
+                fieldErrors
+        );
 
-   @ExceptionHandler(ResourceNotFoundException.class)
-        public ResponseEntity<ApiResponse<Void>> handleResourceNotFound(
-        ResourceNotFoundException ex) {
+        return ResponseEntity
+                .badRequest()
+                .body(error);
+        }
 
-    ApiResponse<Void> response = new ApiResponse<>(
-            HttpStatus.NOT_FOUND.value(),
-            ex.getMessage(),
-            null
-    );
+        @ExceptionHandler(ResourceNotFoundException.class)
+                public ResponseEntity<ApiResponse<Void>> handleResourceNotFound(
+                ResourceNotFoundException ex) {
 
-    return ResponseEntity
-            .status(HttpStatus.NOT_FOUND)
-            .body(response);
+        ApiResponse<Void> response = new ApiResponse<>(
+                HttpStatus.NOT_FOUND.value(),
+                ex.getMessage(),
+                null
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(response);
         }
 
         @ExceptionHandler(ResourceAlreadyExistsException.class)

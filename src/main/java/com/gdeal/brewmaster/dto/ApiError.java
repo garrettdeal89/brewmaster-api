@@ -1,5 +1,6 @@
 package com.gdeal.brewmaster.dto;
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -27,20 +28,45 @@ public class ApiError {
     
     @Schema(
     description = "Detailed description of the error",
-    example = "Page size cannot exceed 100"
+    example = "Request validation failed"
     )
     private String message;
 
-    public ApiError () {
+    @Schema(
+        defaultValue = "Validation errors associated with individual fields"
+    )
+    private Map<String, String> fielderrors;
 
+
+public ApiError () {}
+
+    public ApiError(
+        int status,
+        String error,
+        String message) {
+
+        this(
+
+            status,
+            error,
+            message,
+            null
+        );
     }
 
-    public ApiError(int status, String error, String message) {
-        this.timestamp = LocalDateTime.now();
-        this.status = status;
-        this.error = error;
-        this.message = message;
-    }
+    public ApiError(
+
+        int status,
+        String error,
+        String message,
+        Map<String, String> fieldErrors) {
+
+            this.timestamp = timestamp;
+            this. status = status;
+            this.error = error;
+            this.message = message;
+            this.fielderrors = fieldErrors;
+        }
 
     public LocalDateTime getTimestamp() {
         return timestamp;
@@ -57,6 +83,10 @@ public class ApiError {
         return message;
     }
 
+    public Map<String, String> getFieldErrors() {
+        return fielderrors;
+    }
+
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
     }
@@ -71,5 +101,9 @@ public class ApiError {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setFieldErrors(Map<String, String> fieldErrors) {
+        this.fielderrors = fieldErrors;
     }
 }
